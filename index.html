@@ -107,8 +107,8 @@
     .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
     .form-group { flex: 1; min-width: 120px; display: flex; flex-direction: column; gap: 8px; }
     .form-group label { font-size: 0.9rem; color: var(--muted); }
-    .form-group input[type="number"] { width: 100%; padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); color: var(--text); font-family: inherit; outline: none; }
-    .form-group input[type="number"]:focus { border-color: var(--cyan); }
+    .form-group input[type="number"], .form-group input[type="text"] { width: 100%; padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); color: var(--text); font-family: inherit; outline: none; }
+    .form-group input:focus { border-color: var(--cyan); }
     .checkbox-group { display: flex; gap: 20px; margin: 15px 0; flex-wrap: wrap; }
     .checkbox-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .checkbox-group input { accent-color: var(--cyan); width: 18px; height: 18px; }
@@ -366,9 +366,20 @@
             </div>
             <h3 style="margin-top:30px; color:var(--cyan);">الصفحات المستهدفة</h3>
             <div class="checkbox-group">
-              <label><input type="checkbox" id="pageSolve" value="page-solve" checked> حل المنصة</label>
+              <label><input type="checkbox" id="pageSolve" value="page-solve" checked onchange="window.toggleLevelSelection()"> حل المنصة</label>
               <label><input type="checkbox" id="pageTest" value="page-test"> Test</label>
             </div>
+            
+            <div id="levelSelectionArea" style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line);">
+              <label style="display:block; margin-bottom:10px; color:var(--cyan);">تحديد المستويات المتاحة للمستخدم:</label>
+              <input type="text" id="kLevelRange" placeholder="مثال: 1-5 أو 1,2,3,4,5 (اتركه فارغاً للكل)" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white; margin-bottom:10px;">
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="button" onclick="window.setLevelRange('1-20')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">1 - 20</button>
+                  <button type="button" onclick="window.setLevelRange('21-42')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">21 - 42</button>
+                  <button type="button" onclick="window.setLevelRange('all')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">الكل</button>
+              </div>
+            </div>
+
             <h3 style="margin-top:30px; color:var(--cyan);">عدد الأجهزة</h3>
             <div class="form-row"><div class="form-group"><input type="number" id="kDevices" min="1" value="1" required></div></div>
             <button type="submit" class="btn-glow" style="margin-top:20px;"><span>توليد المفتاح</span></button>
@@ -418,10 +429,21 @@
       <div class="form-group" style="margin-bottom: 15px;">
         <label>الصفحات المستهدفة</label>
         <div class="checkbox-group" style="margin: 5px 0;">
-          <label><input type="checkbox" id="editPageSolve" value="page-solve"> حل المنصة</label>
+          <label><input type="checkbox" id="editPageSolve" value="page-solve" onchange="window.toggleEditLevelSelection()"> حل المنصة</label>
           <label><input type="checkbox" id="editPageTest" value="page-test"> Test</label>
         </div>
       </div>
+      
+      <div id="editLevelSelectionArea" style="margin-bottom: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line);">
+        <label style="display:block; margin-bottom:10px; color:var(--cyan);">تحديد المستويات:</label>
+        <input type="text" id="editLevelRange" placeholder="مثال: 1-5 أو 1,2,3,4,5 (اتركه فارغاً للكل)" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white; margin-bottom:10px;">
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="button" onclick="window.setEditLevelRange('1-20')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">1 - 20</button>
+            <button type="button" onclick="window.setEditLevelRange('21-42')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">21 - 42</button>
+            <button type="button" onclick="window.setEditLevelRange('all')" style="flex:1; padding:8px; border-radius:8px; border:1px solid rgba(0,240,255,0.3); background:rgba(0,240,255,0.1); color:var(--cyan); cursor:pointer; font-family:inherit;">الكل</button>
+        </div>
+      </div>
+
       <div class="form-group" style="margin-bottom: 15px;">
         <label>تعديل الوقت (من لحظة التفعيل)</label>
         <div class="form-row" style="margin-bottom: 0;">
@@ -543,6 +565,22 @@
       const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
       let res = d > 0 ? `${d}d ` : "";
       return res + `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // === LEVEL SELECTION HELPERS ===
+    function toggleLevelSelection() {
+      const isChecked = document.getElementById('pageSolve').checked;
+      document.getElementById('levelSelectionArea').style.display = isChecked ? 'block' : 'none';
+    }
+    function setLevelRange(val) {
+      document.getElementById('kLevelRange').value = val;
+    }
+    function toggleEditLevelSelection() {
+      const isChecked = document.getElementById('editPageSolve').checked;
+      document.getElementById('editLevelSelectionArea').style.display = isChecked ? 'block' : 'none';
+    }
+    function setEditLevelRange(val) {
+      document.getElementById('editLevelRange').value = val;
     }
 
     async function enterDashboard(user) {
@@ -721,6 +759,10 @@
       if(document.getElementById('pageTest').checked) targetPages.push('page-test');
       if(targetPages.length === 0) return showMsg(document.getElementById('keyGenMsg'), 'error', 'اختر صفحة واحدة على الأقل.');
 
+      // Level Range
+      let allowedLevels = document.getElementById('kLevelRange').value.trim();
+      if (!allowedLevels) allowedLevels = 'all';
+
       const devices = parseInt(document.getElementById('kDevices').value) || 1;
       const sec = parseInt(document.getElementById('kSec').value) || 0, min = parseInt(document.getElementById('kMin').value) || 0, hr = parseInt(document.getElementById('kHour').value) || 0;
       const day = parseInt(document.getElementById('kDay').value) || 0, mth = parseInt(document.getElementById('kMonth').value) || 0, yr = parseInt(document.getElementById('kYear').value) || 0;
@@ -731,7 +773,7 @@
       const genBlock = () => Array.from({length:5}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
       const newKeyCode = `${genBlock()}-${genBlock()}-${genBlock()}-${genBlock()}`;
       
-      const newKey = { code: newKeyCode, pages: targetPages, deviceLimit: devices, devicesUsed: [], durationMs, claimedAt: null, expiry: null, createdAt: Date.now() };
+      const newKey = { code: newKeyCode, pages: targetPages, deviceLimit: devices, devicesUsed: [], durationMs, claimedAt: null, expiry: null, createdAt: Date.now(), allowedLevels: allowedLevels };
       await setDoc(doc(db, "keys", newKeyCode), newKey);
       
       showMsg(document.getElementById('keyGenMsg'), 'success', `تم التوليد: ${newKeyCode}`);
@@ -757,6 +799,8 @@
           ).join('') + `</div>`;
         }
 
+        let lvlText = k.allowedLevels && k.allowedLevels !== 'all' ? `(مستويات: ${k.allowedLevels})` : '';
+
         const row = document.createElement('div');
         row.className = 'key-row';
         row.innerHTML = `
@@ -775,7 +819,7 @@
                 </div>
               </div>
             </div>
-            <div class="key-info">الصفحات: ${k.pages.join(', ')}</div>
+            <div class="key-info">الصفحات: ${k.pages.join(', ')} ${lvlText}</div>
             ${usersHtml}
           </div>
         `;
@@ -826,6 +870,10 @@
       document.getElementById('editPageSolve').checked = keyObj.pages.includes('page-solve');
       document.getElementById('editPageTest').checked = keyObj.pages.includes('page-test');
       
+      // Set Levels
+      document.getElementById('editLevelRange').value = keyObj.allowedLevels || 'all';
+      window.toggleEditLevelSelection();
+
       const days = Math.floor(keyObj.durationMs / 86400000);
       const hrs = Math.floor((keyObj.durationMs % 86400000) / 3600000);
       const mins = Math.floor((keyObj.durationMs % 3600000) / 60000);
@@ -846,6 +894,9 @@
         if(document.getElementById('editPageTest').checked) newPages.push('page-test');
         if(newPages.length === 0) return alert('اختر صفحة واحدة على الأقل.');
 
+        let newAllowedLevels = document.getElementById('editLevelRange').value.trim();
+        if (!newAllowedLevels) newAllowedLevels = 'all';
+
         const newDevicesLimit = parseInt(document.getElementById('editKeyDevices').value);
         if (newDevicesLimit < (keyObj.devicesUsed ? keyObj.devicesUsed.length : 0)) {
           return alert('لا يمكنك تقليل عدد الأجهزة لأن هناك أجهزة متصلة. احذف بعض الأجهزة أولاً من القائمة.');
@@ -856,7 +907,7 @@
         const mins = parseInt(document.getElementById('editKeyMin').value) || 0;
         const newDuration = (days * 86400000) + (hrs * 3600000) + (mins * 60000);
 
-        let updates = { deviceLimit: newDevicesLimit, pages: newPages, durationMs: newDuration };
+        let updates = { deviceLimit: newDevicesLimit, pages: newPages, durationMs: newDuration, allowedLevels: newAllowedLevels };
         if(keyObj.claimedAt) updates.expiry = keyObj.claimedAt + newDuration;
 
         await updateDoc(doc(db, "keys", keyToEdit), updates);
@@ -935,15 +986,20 @@
         pageDiv.className = 'tab-content dynamic-page';
         pageDiv.id = 'tab-' + pageId;
         
-        // التعديل هنا: وضع الـ iframe لصفحة "حل المنصة"
         if (pageId === 'page-solve') {
+          // Pass allowedLevels to iframe
+          let url = `./index2.html`;
+          if (keyObj.allowedLevels && keyObj.allowedLevels !== 'all') {
+            url += `?levels=${encodeURIComponent(keyObj.allowedLevels)}`;
+          }
+
           pageDiv.innerHTML = `
             <div class="page-header" style="margin-bottom: 15px;">
               <h2>حل المنصة</h2>
               <p>منصة Qureo التفاعلية — مدمجة بالكامل.</p>
             </div>
             <div class="iframe-container">
-              <iframe src="./index2.html" title="Qureo Platform"></iframe>
+              <iframe src="${url}" title="Qureo Platform"></iframe>
             </div>
           `;
         } else {
@@ -1042,6 +1098,10 @@
     window.removeUserFromKey = removeUserFromKey;
     window.deleteKey = deleteKey;
     window.redeemKey = redeemKey;
+    window.toggleLevelSelection = toggleLevelSelection;
+    window.setLevelRange = setLevelRange;
+    window.toggleEditLevelSelection = toggleEditLevelSelection;
+    window.setEditLevelRange = setEditLevelRange;
   </script>
 </body>
 </html>
