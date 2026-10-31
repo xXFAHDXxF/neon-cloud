@@ -155,7 +155,6 @@
     .key-input { width: 100%; padding: 16px; border-radius: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--line); color: var(--text); font-size: 1.2rem; text-align: center; letter-spacing: 4px; text-transform: uppercase; outline: none; margin-bottom: 20px; font-family: monospace; transition: border 0.3s; }
     .key-input:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,240,255,0.2); }
     
-    /* ================= NEW: Iframe Wrapper ================= */
     .iframe-container {
       flex: 1;
       width: 100%;
@@ -447,9 +446,12 @@
       <div class="form-group" style="margin-bottom: 15px;">
         <label>تعديل الوقت (من لحظة التفعيل)</label>
         <div class="form-row" style="margin-bottom: 0;">
-          <div class="form-group"><label>يوم</label><input type="number" id="editKeyDay" min="0"></div>
-          <div class="form-group"><label>ساعة</label><input type="number" id="editKeyHour" min="0" max="23"></div>
-          <div class="form-group"><label>دقيقة</label><input type="number" id="editKeyMin" min="0" max="59"></div>
+          <div class="form-group"><label>ثانية</label><input type="number" id="editKeySec" min="0" max="59" value="0"></div>
+          <div class="form-group"><label>دقيقة</label><input type="number" id="editKeyMin" min="0" max="59" value="0"></div>
+          <div class="form-group"><label>ساعة</label><input type="number" id="editKeyHour" min="0" max="23" value="0"></div>
+          <div class="form-group"><label>يوم</label><input type="number" id="editKeyDay" min="0" value="0"></div>
+          <div class="form-group"><label>شهر</label><input type="number" id="editKeyMonth" min="0" value="0"></div>
+          <div class="form-group"><label>سنة</label><input type="number" id="editKeyYear" min="0" value="0"></div>
         </div>
       </div>
       <div class="modal-actions">
@@ -872,12 +874,21 @@
       document.getElementById('editLevelRange').value = keyObj.allowedLevels || 'all';
       window.toggleEditLevelSelection();
 
-      const days = Math.floor(keyObj.durationMs / 86400000);
-      const hrs = Math.floor((keyObj.durationMs % 86400000) / 3600000);
-      const mins = Math.floor((keyObj.durationMs % 3600000) / 60000);
-      document.getElementById('editKeyDay').value = days;
-      document.getElementById('editKeyHour').value = hrs;
+      // توزيع الوقت على الخانات الستة
+      const dMs = keyObj.durationMs;
+      const secs = Math.floor((dMs % 60000) / 1000);
+      const mins = Math.floor((dMs % 3600000) / 60000);
+      const hrs = Math.floor((dMs % 86400000) / 3600000);
+      const days = Math.floor((dMs % 2592000000) / 86400000);
+      const mths = Math.floor((dMs % 31536000000) / 2592000000);
+      const yrs = Math.floor(dMs / 31536000000);
+
+      document.getElementById('editKeySec').value = secs;
       document.getElementById('editKeyMin').value = mins;
+      document.getElementById('editKeyHour').value = hrs;
+      document.getElementById('editKeyDay').value = days;
+      document.getElementById('editKeyMonth').value = mths;
+      document.getElementById('editKeyYear').value = yrs;
 
       renderEditUsersList(code);
       editKeyModal.classList.add('active');
@@ -900,10 +911,15 @@
           return alert('لا يمكنك تقليل عدد الأجهزة لأن هناك أجهزة متصلة. احذف بعض الأجهزة أولاً من القائمة.');
         }
 
-        const days = parseInt(document.getElementById('editKeyDay').value) || 0;
-        const hrs = parseInt(document.getElementById('editKeyHour').value) || 0;
+        // حساب الوقت الجديد
+        const secs = parseInt(document.getElementById('editKeySec').value) || 0;
         const mins = parseInt(document.getElementById('editKeyMin').value) || 0;
-        const newDuration = (days * 86400000) + (hrs * 3600000) + (mins * 60000);
+        const hrs = parseInt(document.getElementById('editKeyHour').value) || 0;
+        const days = parseInt(document.getElementById('editKeyDay').value) || 0;
+        const mths = parseInt(document.getElementById('editKeyMonth').value) || 0;
+        const yrs = parseInt(document.getElementById('editKeyYear').value) || 0;
+        
+        const newDuration = (secs * 1000) + (mins * 60000) + (hrs * 3600000) + (days * 86400000) + (mths * 2592000000) + (yrs * 31536000000);
 
         let updates = { deviceLimit: newDevicesLimit, pages: newPages, durationMs: newDuration, allowedLevels: newAllowedLevels };
         if(keyObj.claimedAt) updates.expiry = keyObj.claimedAt + newDuration;
