@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qureo — منصة الحلول</title>
+<style>
+:root{
+  --bg:#04060a;--panel:#0c1119;--line:#1b2431;--txt:#e7eef9;--muted:#78859a;
+  --blue:#3b82f6;--cyan:#22d3ee;--purple:#a855f7;--green:#10b981;--pink:#f472b6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Cairo","Segoe UI",Tahoma,system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;
+  position:relative;-webkit-font-smoothing:antialiased;line-height:1.7;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 600px at 15% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(800px 500px at 90% 0%, rgba(168,85,247,.13), transparent 60%),
+    radial-gradient(1000px 700px at 50% 120%, rgba(34,211,238,.10), transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(120,150,190,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,150,190,.045) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(circle at 50% 30%, #000 20%, transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 30%, #000 20%, transparent 78%);
+}
+.wrap{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 17px;border:1px solid var(--line);border-radius:16px;
+  background:linear-gradient(180deg, rgba(17,24,35,.85), rgba(9,13,19,.85));
+  backdrop-filter:blur(10px);margin-bottom:26px;
+}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  font-weight:800;font-size:17px;color:#fff;letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--blue),var(--purple) 55%,var(--cyan));
+  box-shadow:0 0 20px rgba(59,130,246,.45), inset 0 0 12px rgba(255,255,255,.18);
+}
+.brand-text b{font-size:16px;font-weight:800;letter-spacing:.3px;display:block}
+.brand-text span{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.4px}
+.pill{
+  font-size:12px;font-weight:700;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.28);background:rgba(34,211,238,.07);
+  padding:7px 14px;border-radius:999px;white-space:nowrap;
+}
+.view{display:none;animation:viewIn .45s cubic-bezier(.22,1,.36,1) both}
+.view.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(16px) scale(.995)}to{opacity:1;transform:none}}
+
+.hero{text-align:center;padding:70px 10px 40px}
+.hero h2{
+  font-size:clamp(26px,4.6vw,42px);font-weight:800;line-height:1.35;letter-spacing:-.5px;
+  background:linear-gradient(120deg,#fff 10%,var(--cyan) 45%,var(--blue) 70%,var(--purple) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p{margin-top:16px;color:var(--muted);font-size:14.5px;font-weight:600;line-height:1.9;max-width:540px;margin-inline:auto}
+.cta{
+  margin-top:38px;cursor:pointer;font-family:inherit;
+  font-size:15px;font-weight:800;color:#04060a;
+  padding:16px 38px;border:none;border-radius:14px;
+  background:linear-gradient(100deg,var(--cyan),var(--blue));
+  transition:.28s ease;letter-spacing:.3px;
+}
+.cta:hover{filter:brightness(1.1);transform:translateY(-3px);
+  box-shadow:0 22px 44px -18px rgba(34,211,238,.8)}
+.cta:active{transform:translateY(-1px) scale(.98)}
+
+.page-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0}
+.back{
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:800;color:var(--muted);
+  padding:10px 16px;border-radius:12px;
+  border:1px solid var(--line);background:var(--panel);
+  transition:.28s;font-family:inherit;
+}
+.back:hover{color:var(--cyan);border-color:rgba(34,211,238,.4);transform:translateX(4px)}
+.page-title{font-size:clamp(20px,3.2vw,28px);font-weight:800;letter-spacing:-.3px}
+.page-title em{
+  font-style:normal;
+  background:linear-gradient(100deg,var(--cyan),var(--blue) 60%,var(--purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.page-sub{color:var(--muted);font-size:13px;font-weight:600;margin:10px 0 24px;line-height:1.9}
+.legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.legend span{
+  font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;
+  border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02);
+}
+.legend .t1{color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.legend .t2{color:#22d3ee;border-color:rgba(34,211,238,.3)}
+.legend .t3{color:#a855f7;border-color:rgba(168,85,247,.3)}
+.legend .t4{color:#f472b6;border-color:rgba(244,114,182,.3)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:12px}
+.level{
+  position:relative;overflow:hidden;cursor:pointer;border-radius:15px;
+  border:1px solid var(--line);
+  background:linear-gradient(165deg, rgba(19,26,38,.92), rgba(9,13,19,.92));
+  padding:16px 11px 14px;text-align:center;
+  transition:transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s, background .3s;
+  animation:popIn .5s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:calc(var(--i) * 12ms);user-select:none;
+}
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+.level::after{
+  content:"";position:absolute;top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%);
+  transform:translateX(-130%);transition:transform .65s;pointer-events:none;
+}
+.level .num{font-size:24px;font-weight:800;letter-spacing:-1px;color:#cfe0f5;transition:.3s;line-height:1.1}
+.level .lbl{display:block;margin-top:6px;font-size:10px;font-weight:700;letter-spacing:.6px;color:var(--muted);transition:.3s}
+.level.tier-1{border-color:rgba(59,130,246,.22)}
+.level.tier-2{border-color:rgba(34,211,238,.22)}
+.level.tier-3{border-color:rgba(168,85,247,.22)}
+.level.tier-4{border-color:rgba(244,114,182,.22)}
+.level.tier-1 .lbl{color:#60a5fa}
+.level.tier-2 .lbl{color:#22d3ee}
+.level.tier-3 .lbl{color:#a855f7}
+.level.tier-4 .lbl{color:#f472b6}
+.level.open{
+  border-color:rgba(34,211,238,.6);
+  box-shadow:0 0 0 1px rgba(34,211,238,.18) inset;
+}
+.level:hover{
+  transform:translateY(-6px) scale(1.045);
+  background:linear-gradient(165deg, rgba(28,38,54,.98), rgba(12,18,27,.98));
+  border-color:rgba(34,211,238,.65);
+  box-shadow:0 20px 44px -18px rgba(34,211,238,.5),0 0 0 1px rgba(34,211,238,.2) inset;
+  z-index:3;
+}
+.level:hover::after{transform:translateX(130%)}
+.level:hover .num{color:#fff;text-shadow:0 0 18px rgba(34,211,238,.85)}
+.level:active{transform:translateY(-2px) scale(.97)}
+.level.flash{animation:flashCut .45s ease}
+@keyframes flashCut{0%{box-shadow:0 0 0 0 rgba(34,211,238,.9)}100%{box-shadow:0 0 0 22px rgba(34,211,238,0)}}
+
+.lv-hero{text-align:center;padding:30px 10px 24px;margin-bottom:22px;border-bottom:1px dashed var(--line)}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:800;padding:7px 15px;border-radius:999px;
+  color:var(--cyan);background:rgba(34,211,238,.08);
+  border:1px solid rgba(34,211,238,.28);margin-bottom:14px;letter-spacing:.4px;
+}
+.lv-hero h1{
+  font-size:clamp(24px,4vw,34px);font-weight:800;line-height:1.35;letter-spacing:-.6px;
+  background:linear-gradient(120deg,#fff 10%,var(--cyan) 50%,var(--purple) 90%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lv-hero p{color:var(--muted);font-size:13px;font-weight:600;margin-top:12px;max-width:520px;margin-inline:auto;line-height:1.9}
+
+.lesson{
+  background:linear-gradient(165deg, rgba(17,24,35,.85), rgba(9,13,19,.9));
+  border:1px solid var(--line);border-radius:18px;
+  padding:22px 20px 20px;margin-bottom:18px;
+  position:relative;overflow:hidden;
+  animation:viewIn .5s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:calc(var(--d) * 55ms);
+}
+.lesson::before{
+  content:"";position:absolute;top:0;right:0;left:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.5;
+}
+.lesson-head{
+  display:flex;align-items:center;gap:11px;
+  margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.lnum{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  font-weight:800;font-size:15px;color:#04060a;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  box-shadow:0 0 18px rgba(34,211,238,.4);flex:none;
+}
+.ltitle{font-size:16px;font-weight:800;letter-spacing:-.2px}
+
+.q{margin-bottom:20px}
+.q:last-child{margin-bottom:0}
+.q-num{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11.5px;font-weight:800;color:var(--purple);
+  margin-bottom:8px;letter-spacing:.3px;
+}
+.q-num b{
+  display:grid;place-items:center;width:22px;height:22px;border-radius:7px;
+  background:rgba(168,85,247,.14);border:1px solid rgba(168,85,247,.3);font-size:11px;
+}
+.q-text{font-size:14px;font-weight:600;color:var(--txt);line-height:1.85;margin-bottom:11px}
+
+.ans{
+  position:relative;
+  background:linear-gradient(165deg, rgba(22,30,44,.95), rgba(11,15,22,.95));
+  border:1px solid rgba(34,211,238,.22);
+  border-radius:13px;padding:14px 16px;padding-left:54px;
+  transition:.28s;
+}
+.ans:hover{border-color:rgba(34,211,238,.45);box-shadow:0 0 22px rgba(34,211,238,.12)}
+.ans.text-only{padding-left:16px;padding-right:66px}
+.ans-label{
+  font-size:10px;font-weight:800;color:var(--green);letter-spacing:.8px;
+  margin-bottom:7px;display:flex;align-items:center;gap:6px;
+}
+.ans-label::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 8px var(--green);
+}
+.ans-body{font-size:14px;font-weight:700;color:#e7eef9;line-height:1.8;word-break:break-word}
+.ans-code{
+  direction:ltr;text-align:left;
+  font-family:"JetBrains Mono","Consolas","Menlo",monospace;
+  font-size:13px;line-height:1.7;color:#d7e5f8;
+  white-space:pre;overflow-x:auto;font-weight:500;
+}
+.copy{
+  position:absolute;top:11px;left:11px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:inherit;font-size:10.5px;font-weight:800;
+  color:var(--cyan);background:rgba(34,211,238,.08);
+  border:1px solid rgba(34,211,238,.3);
+  padding:6px 10px;border-radius:8px;transition:.25s;letter-spacing:.3px;
+}
+.copy:hover{color:#04060a;background:var(--cyan);border-color:var(--cyan);
+  transform:translateY(-1px);box-shadow:0 8px 20px -8px rgba(34,211,238,.7)}
+.copy:active{transform:translateY(0) scale(.96)}
+.copy.done{color:#04060a;background:var(--green);border-color:var(--green);
+  box-shadow:0 8px 20px -8px rgba(16,185,129,.7)}
+.copy svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.done-card{
+  text-align:center;padding:34px 22px;border-radius:20px;
+  border:1px solid rgba(168,85,247,.3);
+  background:linear-gradient(160deg, rgba(168,85,247,.1), rgba(59,130,246,.05));
+  margin-top:26px;position:relative;overflow:hidden;
+}
+.done-card::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(168,85,247,.15),transparent);
+  transform:translateX(-100%);animation:sweep 3.5s ease-in-out infinite;
+}
+@keyframes sweep{0%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
+.done-card .ico{font-size:40px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(168,85,247,.5))}
+.done-card h3{
+  font-size:20px;font-weight:800;margin-bottom:9px;
+  background:linear-gradient(100deg,var(--purple),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.done-card p{color:var(--muted);font-size:13px;font-weight:600;line-height:1.9;max-width:420px;margin-inline:auto}
+
+.toast{
+  position:fixed;bottom:26px;left:50%;
+  transform:translate(-50%, 120px);
+  background:linear-gradient(100deg,var(--green),var(--cyan));
+  color:#04060a;font-weight:800;font-size:13px;
+  padding:11px 20px;border-radius:11px;
+  box-shadow:0 20px 50px -20px rgba(16,185,129,.8);
+  opacity:0;transition:.35s cubic-bezier(.22,1,.36,1);z-index:99;pointer-events:none;
+}
+.toast.show{transform:translate(-50%, 0);opacity:1}
+
+.foot{margin-top:48px;text-align:center;font-size:11px;font-weight:700;color:#39424f;letter-spacing:.5px}
+
+@media (max-width:640px){
+  .wrap{padding:14px 13px 70px}
+  .hero{padding:44px 4px 30px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px}
+  .level{padding:13px 7px 11px}
+  .level .num{font-size:21px}
+  .topbar{padding:10px 12px}
+  .brand-text b{font-size:14px}
+  .pill{display:none}
+  .lesson{padding:18px 14px 16px}
+  .ans{padding:13px 14px;padding-left:50px}
+  .ans.text-only{padding-left:14px;padding-right:60px}
+  .copy{padding:5px 8px;font-size:9.5px;top:9px;left:9px}
+  .copy span{display:none}
+  .copy svg{width:13px;height:13px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">Q</div>
+      <div class="brand-text">
+        <b>Qureo</b>
+        <span>منصة الحلول</span>
+      </div>
+    </div>
+    <div class="pill" id="headerPill">JavaScript · 42 مستوى</div>
+  </div>
+
+  <!-- الرئيسية (تظهر فقط عند الرجوع) -->
+  <section class="view" id="view-home">
+    <div class="hero">
+      <h2>حلول JavaScript — 42 مستوى</h2>
+      <p>كل إجابة قابلة للنسخ بزر واحد. اضغط على أي مستوى تشوف دروسه وأسئلته.</p>
+      <button class="cta" onclick="showView('view-levels')">ابدأ — اعرض المستويات</button>
+    </div>
+  </section>
+
+  <!-- شبكة المستويات (الصفحة الافتراضية) -->
+  <section class="view active" id="view-levels">
+    <div class="page-head">
+      <button class="back" onclick="showView('view-home')">→ الرئيسية</button>
+      <div class="page-title">مسار <em>JavaScript</em></div>
+    </div>
+    <div class="page-sub">42 مستوى — اضغط على المستوى لتفتح محتواه كامل مع كل الحلول.</div>
+    <div class="legend">
+      <span class="t1">أساسيات · 1–10</span>
+      <span class="t2">متوسط · 11–20</span>
+      <span class="t3">متقدم · 21–30</span>
+      <span class="t4">احترافي · 31–42</span>
+    </div>
+    <div class="grid" id="jsGrid"></div>
+  </section>
+
+  <!-- عرض المستوى -->
+  <section class="view" id="view-level">
+    <div class="page-head">
+      <button class="back" onclick="showView('view-levels')">→ رجوع للمستويات</button>
+      <div class="page-title" id="lvTitle">المستوى</div>
+    </div>
+    <div id="levelContent"></div>
+  </section>
+
+  <div class="foot">Qureo · 2026</div>
+</div>
+
+<div class="toast" id="toast">✓ تم النسخ</div>
+
+<script>
+/* =========================================================
+   بيانات المستويات (1–42)
+   ========================================================= */
+const L = {  /* ---------- المستوى 1 ---------- */
+  1: { t: "المستوى الأول — الأساسيات", s: [
+    { t: "الدرس الأول — انضم إلى ريكي", q: [
+      ["انضم إلى ريكي في محادثة! أجب عن أسئلة ريكي.", "أريد أن ألعب به!", 0],
+    ]},
+    { t: "الدرس الثاني — لغات البرمجة", q: [
+      ["كم عدد لغات البرمجة الموجودة في العالم؟", "أكثر من 100 نوع", 0],
+    ]},
+    { t: "الدرس الثالث — أول برنامج", q: [
+      ["أدخل نفس البرنامج كما في الأسفل ثم شغّل الكود. (Hello)", "console.log(\"Hello\");", 1],
+      ["أدخل نفس البرنامج كما في الأسفل ثم شغّل الكود. (Good morning)", "console.log(\"Good morning\");", 1],
+    ]},
+    { t: "الدرس الرابع — المحرر", q: [
+      ["ماذا تُسمى الشاشة السوداء التي تكتب فيها برنامجك؟", "المحرر", 0],
+      ["أدخل نفس البرنامج كما في الأسفل ثم شغّل الكود. (Good evening)", "console.log(\"Good evening\");", 1],
+      ["أنشئ برنامجك: اعرض \"Good night\" في وحدة التحكم.", "console.log(\"Good night\");", 1],
+      ["ابحث عن الأخطاء في برنامجك، وبمجرد أن تجد الخطأ اضغط على \"تشغيل الكود\".", "تشغيل الكود", 0],
+      ["أنشئ برنامجك: اعرض \"Good luck\" في وحدة التحكم.", "console.log(\"Good luck\");", 1],
+    ]},
+    { t: "الدرس الخامس — التعليقات", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["لنعدّل السطر الأول ليصبح نفس البرنامج كما في الأسفل.", "//When executed, the text is output to the console.\nconsole.log(\"Hello\");", 1],
+    ]},
+    { t: "الدرس السادس — تعليق الأسطر", q: [
+      ["أنشئ برنامجك: ضع تعليقًا بالجملة \"Greetings for the day\".", "//Greetings for the day.\nconsole.log(\"Good morning\");\nconsole.log(\"Hello\");\nconsole.log(\"Good evening\");", 1],
+      ["لنعدّل السطر الثاني ليصبح نفس البرنامج كما في الأسفل.", "console.log(\"Eggs\");\n//console.log(\"Apple\");\nconsole.log(\"Milk\");", 1],
+      ["عدّل برنامجك: علّق البرنامج الذي يعرض \"Fish\".", "console.log(\"Lion\");\n//console.log(\"Fish\");\nconsole.log(\"Elephant\");\nconsole.log(\"Giraffe\");", 1],
+      ["هل يبدو كل شيء جيدًا حتى الآن؟", "نعم، ممتاز", 0],
+    ]},
+    { t: "مراجعة المستوى الأول", q: [
+      ["اختر البرنامج الصحيح لعرض \"Hello\" في وحدة التحكم.", "console.log(\"Hello\");", 1],
+      ["أنشئ برنامجك: اعرض \"Good morning\" في وحدة التحكم.", "console.log(\"Good morning\");", 1],
+      ["أنشئ برنامجك: اعرض \"Programming\" في وحدة التحكم.", "console.log(\"Programming\");", 1],
+      ["أنشئ برنامجك: اعرض \"Hello\" في وحدة التحكم.", "console.log(\"Hello\");", 1],
+      ["يرجى اختيار الطريقة الصحيحة لكتابة التعليق.", "//Write your comments here.", 1],
+      ["علّق البرنامج بحيث تكون المخرجات: Hello. / My name is / Cody.", "console.log(\"Hello.\");\nconsole.log(\"My name is\");\n//console.log(\"Rick.\");\nconsole.log(\"Cody.\");", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 2 ---------- */
+  2: { t: "المستوى الثاني — العمليات الحسابية", s: [
+    { t: "الدرس الأول — الحساب الأساسي", q: [
+      ["أنشئ برنامجك: اعرض \"Let's calculate.\" في وحدة التحكم.", "console.log(\"Let's calculate.\");", 1],
+      ["أدخل نفس البرنامج كما في الأسفل.", "console.log(\"1+1\");", 1],
+      ["لنعدّل البرنامج ليصبح نفس ما يلي.", "console.log(1+1);", 1],
+      ["اجعل الكمبيوتر يحسب 1400+3600 ويعرض النتيجة.", "console.log(1400+3600);", 1],
+    ]},
+    { t: "الدرس الثاني — الجمع والطرح والضرب والقسمة", q: [
+      ["اجعل الكمبيوتر يحسب 432+345 ويعرض النتيجة.", "console.log(432+345);", 1],
+      ["اجعل الكمبيوتر يحسب 100-50 ويعرض النتيجة.", "console.log(100-50);", 1],
+      ["اجعل الكمبيوتر يحسب 5×6 ويعرض النتيجة.", "console.log(5*6);", 1],
+      ["اجعل الكمبيوتر يحسب 10÷5 ويعرض النتيجة.", "console.log(10/5);", 1],
+      ["اجعل الكمبيوتر يحسب 10000000000 × 10000000000.", "console.log(10000000000*10000000000);", 1],
+    ]},
+    { t: "الدرس الثالث — دمج النصوص مع الحساب (codycoins)", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["أدخل نفس البرنامج: النواقص هي + + ثم (250 * 2).", "console.log(\"Set of 2 coffees \" + (250 * 2) + \" codycoins\");", 1],
+      ["أدخل نفس البرنامج: الناقص هو (250 * 2).", "console.log(\"Set of 2 coffees \" + (250 * 2) + \" codycoins\");", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الرابع — ضرب ودمج", q: [
+      ["أكمل السطر الثاني: الناقص هو + (250 * 3) +", "console.log(\"Set of 3 coffees \" + (250 * 3) + \" codycoins\");", 1],
+      ["أكمل البرنامج: الناقص هو + (320 * 1) +", "console.log(\"One muffin \" + (320 * 1) + \" codycoins\");", 1],
+      ["اعرض \"Two muffins 640 codycoins\" (الناقص: \" + (320 * 2) + \").", "console.log(\"Two muffins \" + (320 * 2) + \" codycoins\");", 1],
+    ]},
+    { t: "مراجعة المستوى الثاني", q: [
+      ["اختر البرنامج الصحيح لعرض نتيجة 50+100.", "console.log(50 + 100);", 1],
+      ["اختر الرمز الصحيح للقسمة المستخدم في البرنامج.", "/", 0],
+      ["اجعل الكمبيوتر يحسب 19+40 ويعرض النتيجة.", "console.log(19+40);", 1],
+      ["اجعل الكمبيوتر يحسب 7-2 ويعرض النتيجة.", "console.log(7-2);", 1],
+      ["اجعل الكمبيوتر يحسب 15÷5 ويعرض النتيجة.", "console.log(15/5);", 1],
+      ["اختر البرنامج الصحيح لعرض \"Today is the 17th. 7 days ago was the 10th.\"", "console.log(\"Today is the 17th.7 days ago was the \" + (17 - 7) + \"th.\");", 1],
+      ["اجعل الكمبيوتر يحسب 2*5 ويعرض \"The answer is 10.\"", "console.log(\"The answer is \" + (2*5) + \".\");", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 3 ---------- */
+  3: { t: "المستوى الثالث — المتغيرات", s: [
+    { t: "الدرس الأول — إعلان وعرض المتغيرات", q: [
+      ["أنشئ برنامجًا لعرض قيمة المتغيّر fish في وحدة التحكم.", "let fish;\nfish = 0;\nfish = fish + 3;\nfish = fish + 7;\nconsole.log(fish);", 1],
+      ["أنشئ برنامجًا يعرض \"fish\" في وحدة التحكم.", "let fish;\nfish = 0;\nfish = fish + 3;\nfish = fish + 7;\nconsole.log(\"fish\");", 1],
+    ]},
+    { t: "الدرس الثاني — إعلان وإسناد وتراكم", q: [
+      ["أعلن fish، أسند 0، ثم fish + 8، ثم fish + 12، واعرض القيمة.", "let fish;\nfish = 0;\nfish = fish + 8;\nfish = fish + 12;\nconsole.log(fish);", 1],
+      ["أعلن apple، أسند 0، ثم 5، ثم 8، واعرض القيمة.", "let apple;\napple = 0;\napple = apple + 5;\napple = apple + 8;\nconsole.log(apple);", 1],
+      ["أعلن allowance، أسند 700، ثم 1500، واعرض القيمة.", "let allowance;\nallowance = 700;\nallowance = allowance + 1500;\nconsole.log(allowance);", 1],
+    ]},
+    { t: "مراجعة المستوى الثالث", q: [
+      ["اختر البرنامج الصحيح لإعلان المتغيّر score.", "let score;", 1],
+      ["اختر البرنامج الصحيح لعرض قيمة المتغيّر score.", "console.log(score);", 1],
+      ["أعلن المتغيّر number فقط.", "let number", 1],
+      ["في السطر الثاني، أسند 100 إلى number.", "let number;\nnumber = 100", 1],
+      ["في السطر الثالث، اعرض قيمة number.", "let number;\nnumber = 10;\nconsole.log(number)", 1],
+      ["بعد السطر الثالث، أضف 10 إلى number واعرض القيمة.", "let number;\nnumber = 3;\nnumber = number +10\nconsole.log(number)", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 4 ---------- */
+  4: { t: "المستوى الرابع — مراجعة 1–3", s: [
+    { t: "الدرس الأول — مراجعة من 1 إلى 3", q: [
+      ["اكتب الجملة Write the program on the line below. كتعليق ثم اطبع \"Good evening\".", "//Write the program on the line below.\nconsole.log(\"Good evening\");", 1],
+      ["اطبع \"Bread and coffee for 350 codycoins\" (احسب 350 كـ 200+150).", "console.log(\"Bread and coffee for \" + (200 + 150) + \" codycoins\");", 1],
+      ["أعلن num، أسند 2، ثم num+8، واعرض القيمة.", "let num;\nnum = 2;\nnum = num + 8;\nconsole.log(num);", 1],
+    ]},
+    { t: "اختبار المستوى الرابع", q: [
+      ["اختر البرنامج الصحيح لإخراج \"Hello\".", "console.log(\"Hello\");", 1],
+      ["اختر البرنامج الصحيح لإخراج \"Hello\" (سؤال ثانٍ).", "console.log(\"Hello\");", 1],
+      ["غيّر \"Leave this text.\" إلى تعليق.", "//Leave this text.\nconsole.log(\"Make the first line a comment.\");", 1],
+      ["اختر البرنامج الصحيح لحساب 5+7.", "console.log(5 + 7);", 1],
+      ["اختر الرمز الصحيح للضرب.", "*", 0],
+      ["اجعل الحاسوب يحسب 3*5 ويُخرج \"The answer is 15.\"", "console.log(\"The answer is \" + ( 3 * 5) + \".\");", 1],
+      ["اختر التصريح الصحيح للمتغير number.", "let number;", 1],
+      ["أعلن num، أسند 5، واعرض القيمة.", "let num\nnum = 5\nconsole.log(num)", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 5 ---------- */
+  5: { t: "المستوى الخامس — الشروط (أساسي)", s: [
+    { t: "الدرس الأول — تصريح وإسناد مختصر", q: [
+      ["أعلن fish، أسند 0، واعرض القيمة.", "let fish;\nfish = 0;\nconsole.log(fish);", 1],
+      ["أدخل برنامجك كما يلي: let fish = 0; console.log(fish);", "let fish = 0;\nconsole.log(fish);", 1],
+      ["أعلن apple = 0، أسند apple+10، واعرض القيمة.", "let apple = 0;\napple = apple + 10;\nconsole.log(apple);", 1],
+    ]},
+    { t: "الدرس الثاني — المتغير science", q: [
+      ["انقر على \"تشغيل الكود\" بدون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["اسند 80 للمتغيّر science في المكان الفارغ.", "80", 0],
+    ]},
+    { t: "الدرس الثالث — if statements", q: [
+      ["أدخل الجزء الناقص: if (science == 100)", "if (science == 100)", 1],
+      ["أدخل الجزء الناقص: {console.log(\"Increased allowance!\");}", "{console.log(\"Increased allowance!\");}", 1],
+      ["أنشئ البرنامج كاملًا: science=100 ثم إذا كانت 100 اطبع الرسالة.", "let science = 100;\nif (science == 100){console.log(\"Increased allowance!\");}", 1],
+      ["أعلن science = 100، وإذا كانت 100 اطبع \"Increased allowance!\".", "let science = 100;\nif (science == 100){console.log(\"Increased allowance!\");}", 1],
+      ["أعلن math = 100، وإذا كانت 100 اطبع \"Get a reward\".", "let math = 100;\nif (math == 100){console.log(\"Get a reward\");}", 1],
+    ]},
+    { t: "الدرس الرابع — المقارنات", q: [
+      ["انقر على \"تشغيل الكود\" بدون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" بدون تعديل البرنامج (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["هل ينتج true أم false؟ let math = 80; console.log(math == 80);", "true", 0],
+    ]},
+    { t: "مراجعة المستوى الخامس", q: [
+      ["أعلن num = 5 واطبع قيمته في سطرين.", "let num = 5\nconsole.log(num)", 1],
+      ["اختر برنامجًا يقول: إذا ~، إذن ______.", "if (conditional){processing}", 1],
+      ["اختر عبارة الشرط \"قيمة المتغيّر num تساوي 50\".", "num == 50", 1],
+      ["أعلن num = 100، وإذا كانت 100 اطبع \"Correct\".", "let num = 100\nif (num == 100){console.log(\"Correct\")};", 1],
+      ["اختر نتيجة إخراج: let num = 200; console.log(num == 100).", "false", 0],
+    ]},
+  ]},
+
+  /* ---------- المستوى 6 ---------- */
+  6: { t: "المستوى السادس — if / else", s: [
+    { t: "الدرس الأول — if / else أساسي", q: [
+      ["أعلن science = 100، وإذا كانت 100 اطبع \"Increased allowance!\".", "let science = 100;\nif (science == 100){console.log(\"Increased allowance!\");}", 1],
+      ["أسند 80 إلى science وأضف else لطباعة \"Weeding the garden\".", "let science = 80;\nif (science == 100){console.log(\"Increased allowance!\");}\nelse {console.log(\"Weeding the garden\");}", 1],
+      ["أضف else لطباعة \"No reward\" إذا لم تكن math = 100.", "let math = 80;\nif (math == 100){console.log(\"Get reward\");}\nelse {console.log(\"No reward\");}", 1],
+    ]},
+    { t: "الدرس الثاني — قيمتين (شرط وبديل)", q: [
+      ["أنشئ برنامج egg للتحقق من 0 وطباعة الرسالة المناسبة.", "let egg = 10;\nif (egg == 0){console.log(\"Let's go buy some.\");}\nelse {console.log(\"I still have some.\");}", 1],
+      ["أعلن num = 777، إذا كانت 777 اطبع lucky وإلا better luck next time.", "let num = 777;\nif (num == 777){console.log(\"lucky\");}\nelse {console.log(\"better luck next time\");}", 1],
+    ]},
+    { t: "الدرس الثالث — مقارنات ≤ و ≥", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["برنامج math ≤ 50: اطبع \"Add homework\" وإلا \"No homework!\".", "let math = 30;\nif (math <= 50){console.log(\"Add homework\");}\nelse {console.log(\"No homework!\");}", 1],
+      ["الناقص: word >= 70 (لطبع pass أو fail).", "let word = 60;\nif (word >= 70){console.log(\"pass\");}\nelse {console.log(\"fail\");}", 1],
+    ]},
+    { t: "الدرس الرابع — مقارنات < و >", q: [
+      ["الناقص: height > 130 (Can ride / Cannot ride).", "let height = 91;\nif (height > 130){console.log(\"Can ride\");}\nelse {console.log(\"Cannot ride\");}", 1],
+      ["الناقص: height < 80 (Cannot ride / Can ride).", "let height = 91;\nif (height < 80){console.log(\"Cannot ride\");}\nelse {console.log(\"Can ride\");}", 1],
+      ["برنامج age ≤ 16: اطبع \"No entry\" وإلا \"Entry allowed\".", "let age = 15;\nif (age <= 16){console.log(\"No entry\");}\nelse {console.log(\"Entry allowed\");}", 1],
+      ["أعلن age = 15، إذا ≥ 60 اطبع \"Cannot jump\" وإلا \"Can jump\".", "let age = 15;\nif (age >= 60){console.log(\"Cannot jump\");}\nelse {console.log(\"Can jump\");}", 1],
+    ]},
+    { t: "مراجعة المستوى السادس", q: [
+      ["اختر برنامجًا يقول إذا كان الشرط ~ فافعل A، وإلا فافعل B.", "if (conditional){A}\nelse{B}", 1],
+      ["أعلن num = 5، إذا 10 اطبع Win وإلا Lose.", "let num = 5\nif(num == 10){console.log(\"Win\")}\nelse {console.log(\"Lose\")}", 1],
+      ["اختر التعبير الشرطي \"قيمة المتغيّر num أصغر من أو تساوي 80\".", "num <= 80", 1],
+      ["اختر التعبير الشرطي \"قيمة المتغيّر num أكبر من 30\".", "num > 30", 1],
+      ["الناقص: score >= 60 (لطبع Pass أو Fail).", "let score = 80;\nif (score >= 60){console.log(\"Pass\");}\nelse {console.log(\"Fail\");}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 7 ---------- */
+  7: { t: "المستوى السابع — else if", s: [
+    { t: "الدرس الأول — else if أساسي", q: [
+      ["أضف السطر الثالث: else if (num == 2){console.log(\"Pair of tickets to the aquarium\");}", "let num = 2;\nif (num == 1){console.log(\"New bicycle\");}\nelse if (num == 2){console.log(\"Pair of tickets to the aquarium\");}", 1],
+    ]},
+    { t: "الدرس الثاني — سلاسل else if متعددة", q: [
+      ["أضف else if لـ num==3 يطبع \"10 bags of potato chips\".", "let num = 3;\nif (num == 1){console.log(\"New bicycle\");}\nelse if (num == 2){console.log(\"Pair of tickets to the aquarium\");}\nelse if (num == 3){console.log(\"10 bags of potato chips\");}", 1],
+      ["أضف else if لـ num==4 يطبع \"Illustrated book of sea creatures\".", "let num = 4;\nif (num == 1){console.log(\"New bicycle\");}\nelse if (num == 2){console.log(\"Pair of tickets to the aquarium\");}\nelse if (num == 3){console.log(\"10 bags of potato chips\");}\nelse if (num == 4){console.log(\"Illustrated book of sea creatures\");}", 1],
+      ["أضف else يطبع \"Stickers\" إذا لم يتحقق أي شرط.", "let num = 10;\nif (num == 1){console.log(\"New bicycle\");}\nelse if (num == 2){console.log(\"Pair of tickets to the aquarium\");}\nelse if (num == 3){console.log(\"10 bags of potato chips\");}\nelse if (num == 4){console.log(\"Illustrated book of sea creatures\");}\nelse{console.log(\"Stickers\");}", 1],
+    ]},
+    { t: "الدرس الثالث — شروط مقارنة متعددة", q: [
+      ["برنامج people: 10% off عند 2، 20% off عند ≥3، وإلا retail price.", "let people = 3;\nif (people == 2){console.log(\"10% off\");}\nelse if (people >= 3){console.log(\"20% off\");}\nelse {console.log(\"retail price\");}", 1],
+      ["الناقص: else if (egg <= 3){console.log(\"I'm almost out of eggs\");}", "let egg = 2;\nif (egg == 0){console.log(\"I have to go buy more eggs\");}\nelse if (egg <= 3){console.log(\"I'm almost out of eggs\");}\nelse {console.log(\"I still have eggs\");}", 1],
+      ["ما النتيجة عند تشغيل البرنامج؟", "تم عرض \"Less than or equal to 10\".", 0],
+      ["اضغط على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+    ]},
+    { t: "مراجعة المستوى السابع", q: [
+      ["اختر برنامجًا يقول \"If ~, do A; if not, do B\".", "if (conditional){A}\nelse if (conditional){B}", 1],
+      ["أضف السطر الثالث: else if (num == 2){console.log(\"Two\")};", "let num = 2;\nif (num == 1){console.log(\"One\");}\nelse if (num == 2){console.log(\"Two\")};", 1],
+      ["أضف السطر الثالث: else if (score >= 80){console.log(\"Pass\")}", "let score = 82;\nif (score == 100){console.log(\"Perfect score\");}\nelse if (score >= 80){console.log(\"Pass\")}", 1],
+      ["اختر نتيجة إخراج: let score = 62; ...", "Pass", 0],
+      ["أعلن egg = 5 وطبق الشروط الثلاثة.", "let egg = 5;\nif (egg == 0){console.log(\"No stock\");}\nelse if (egg <= 3){console.log(\"Low stock\");}\nelse{console.log(\"In stock\");}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 8 ---------- */
+  8: { t: "المستوى الثامن — مراجعة 5–7", s: [
+    { t: "الدرس الأول — مراجعة من 5 إلى 7", q: [
+      ["أعلن science = 100 في سطر واحد، وإذا كانت 100 اطبع \"The reward is a cake\".", "let science = 100;\nif (science == 100){console.log(\"The reward is a cake\");}", 1],
+      ["هل ينتج true أم false؟ let science = 80; console.log(science == 60);", "false", 0],
+      ["أضف else لطباعة \"No reward\".", "let science = 80;\nif (science == 100){console.log(\"The reward is a cake\");}\nelse {console.log(\"No reward\");}", 1],
+      ["الناقص: if (test <= 50){console.log(\"Homework\");}", "let test = 30;\nif (test <= 50){console.log(\"Homework\");}\nelse {console.log(\"No homework\");}", 1],
+      ["أعلن test = 77، وطبق الشروط الثلاثة (Perfect / Pass / Make-up).", "let test = 77;\nif (test == 100){console.log(\"Perfect score\");}\nelse if (test >= 75){console.log(\"Pass\");}\nelse{console.log(\"Make-up exam\");}", 1],
+    ]},
+    { t: "مراجعة المستوى الثامن", q: [
+      ["أعلن num = 7، إذا كانت 7 اطبع \"Correct\".", "let num = 7\nif (num == 7){console.log(\"Correct\")}", 1],
+      ["اختر نتيجة إخراج: let num = 10; console.log(num == 10);", "true", 0],
+      ["الناقص: score >= 60 (Pass / Fail).", "let score = 70;\nif(score >= 60){console.log(\"Pass\");}\nelse{console.log(\"Fail\");}", 1],
+      ["اختر التعبير الشرطي: \"قيمة المتغيّر num أصغر من 20\".", "num < 20", 1],
+      ["أعلن num = 100، إذا 100 اطبع correct وإلا miss.", "let num = 100\nif (num == 100){console.log(\"correct\")}\nelse {console.log(\"miss\")}", 1],
+      ["اختر نتيجة إخراج: let score = 92; ...", "So close", 0],
+      ["النواقص: num <= 3 / num >= 6 / else.", "let num = 4;\nif (num <= 3){console.log(\"A\");}\nelse if (num >= 6){console.log(\"B\");}\nelse {console.log(\"C\");}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 9 ---------- */
+  9: { t: "المستوى التاسع — && و ||", s: [
+    { t: "الدرس الأول — العامل && (AND)", q: [
+      ["الناقص: numberOfPeople >= 2 && fee >= 3000", "let numberOfPeople = 3;\nlet fee = 3500;\nif (numberOfPeople >= 2 && fee >= 3000){console.log(\"20% off\");}", 1],
+      ["نفس السؤال (تأكيد): numberOfPeople >= 2 && fee >= 3000", "let numberOfPeople = 3;\nlet fee = 3500;\nif (numberOfPeople >= 2 && fee >= 3000){console.log(\"20% off\");}", 1],
+    ]},
+    { t: "الدرس الثاني — أسماء الرموز والعمليات المنطقية", q: [
+      ["ماذا تُسمّى علامة \"&\"؟", "ampersand", 0],
+      ["ماذا تُسمّى علامة \"|\"؟", "Vertical bar", 0],
+      ["أعلن numberOfPeople = 2 و fee = 3500، اطبع \"Free mug\" إذا تحقق الشرطان.", "let numberOfPeople = 2;\nlet fee = 3500;\nif (numberOfPeople >= 2 && fee >= 3000){console.log(\"Free mug\");}", 1],
+      ["أعلن age = 15، اطبع \"30% off\" إذا كانت ≤12 أو ≥65.", "let age = 15;\nif (age <= 12 || age >= 65){console.log(\"30% off\");}", 1],
+    ]},
+    { t: "مراجعة المستوى التاسع", q: [
+      ["اختر برنامجًا يعني \"A and B\".", "A && B", 1],
+      ["اختر برنامجًا يعني \"A or B\".", "A || B", 1],
+      ["اختر نتيجة إخراج: let age = 20; if (age <= 18 || age >= 60){...} else {...}", "السعر العادي", 0],
+      ["الناقص: a == 5 || b == 10", "let a = 5;\nlet b = 10;\nif (a == 5 || b == 10){console.log(\"Condition met\");}", 1],
+      ["الناقص: a >= 2 && b >= 3", "let a = 4;\nlet b = 3;\nif (a >= 2 && b >= 3){console.log(\"Condition met\");}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 10 ---------- */
+  10: { t: "المستوى العاشر — for loops", s: [
+    { t: "الدرس الأول — && و || في if/else if", q: [
+      ["أضف السطر الثالث: if (numberOfPeople >= 2 && fee >= 3000) { console.log(\"Free mug\"); }", "let numberOfPeople = 2;\nlet fee = 3500;\nif (numberOfPeople >= 2 && fee >= 3000) { console.log(\"Free mug\"); }", 1],
+      ["أضف else if بعد السطر الخامس.", "let numberOfPeople = 2;\nlet fee = 3500;\nif (numberOfPeople >= 2 && fee >= 3000) {\n  console.log(\"Free mug\");\n} else if (numberOfPeople >= 2 || fee >= 3000) {\n  console.log(\"Complimentary cookie\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — تشغيل كود", q: [
+      ["ماذا تشرب البقرة؟", "ماء", 0],
+      ["انقر على \"تشغيل الكود\" بدون تعديل البرنامج.", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الثالث — أول for loop", q: [
+      ["الناقص: ( let count = 0; count < 10; count = count + 1 )", "for ( let count = 0; count < 10; count = count + 1 )\n{\n  console.log(\"silk\");\n}", 1],
+      ["اطبع \"deer\" عشر مرات باستخدام count.", "for (let count = 0; count < 10; count = count + 1) {\n  console.log(\"deer\");\n}", 1],
+      ["اطبع \"campus\" عشر مرات باستخدام count.", "for (let count = 0; count < 10; count = count + 1) {\n  console.log(\"campus\");\n}", 1],
+      ["ماذا تستخدم لقياس الزوايا؟", "Protractor", 0],
+    ]},
+    { t: "الدرس الرابع — count++ و i++", q: [
+      ["الناقص: let count = 0; count < 10; count = count + 1", "for (let count = 0; count < 10; count = count + 1) {\n  console.log(\"campus\");\n}", 1],
+      ["الناقص: let count = 0; count < 10; count++", "for (let count = 0; count < 10; count++) {\n  console.log(\"campus\");\n}", 1],
+      ["أدخل: for (let i = 0; i < 10; i++) { console.log(\"genius\"); }", "for (let i = 0; i < 10; i++) { console.log(\"genius\"); }", 1],
+    ]},
+    { t: "الدرس الخامس — for بأرقام مختلفة", q: [
+      ["أدخل: for (let i = 0; i < 3; i++) { console.log(\"Red lorry, yellow lorry\"); }", "for (let i = 0; i < 3; i++) { console.log(\"Red lorry, yellow lorry\"); }", 1],
+      ["أدخل: for (let i = 1; i < 3; i++) { console.log(\"Red lorry, yellow lorry\"); }", "for (let i = 1; i < 3; i++) { console.log(\"Red lorry, yellow lorry\"); }", 1],
+      ["اطبع \"Red lorry, yellow lorry\" مئة مرة باستخدام i++.", "for (let i = 0; i < 100; i++) {\n  console.log(\"Red lorry, yellow lorry\");\n}", 1],
+    ]},
+    { t: "مراجعة المستوى العاشر", q: [
+      ["أول شيء تكتبه في برنامج for للتكرار 10 مرات.", "for", 0],
+      ["اختر البرنامج الصحيح لإضافة 1 إلى i.", "i++", 1],
+      ["اختر برنامج for لتكرار العملية 10 مرات.", "for (let i=0; i<10; i++) {\n  Specified process\n}", 1],
+      ["الناقص: let i = 0; i < 5; i++ (لطبع Hello 5 مرات).", "for (let i = 0; i < 5; i++ ) {\n  console.log(\"Hello\");\n}", 1],
+      ["اطبع \"Hello\" 7 مرات باستخدام i++.", "for (let i = 0; i < 7; i++ ) {\n  console.log(\"Hello\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 11 ---------- */
+  11: { t: "المستوى 11 — مراجعة 9–10", s: [
+    { t: "مراجعة من 9 إلى 10", q: [
+      ["أعلن age = 15 و numberOfPeople = 7 واطبق الشرطين (AND).", "let age = 15;\nlet numberOfPeople = 7;\nif (age <= 18 && numberOfPeople >= 5) {\n  console.log(\"Student group discount\");\n}", 1],
+      ["أعلن age = 15، اطبع إذا ≤15 أو ≥70.", "let age = 15;\nif (age <= 15 || age >= 70) {\n  console.log(\"Discounts available\");\n}", 1],
+      ["اطبع \"Good morning\" عشر مرات باستخدام i++.", "for (let i = 0; i < 10; i++) {\n  console.log(\"Good morning\");\n}", 1],
+      ["اطبع \"Go for it\" خمس مرات باستخدام i++.", "for (let i = 0; i < 5; i++) {\n  console.log(\"Go for it\");\n}", 1],
+    ]},
+    { t: "مراجعة واختبار المستوى 11", q: [
+      ["اختر البرنامج الذي يعني \"A أو B\".", "A || B", 1],
+      ["اختر نتيجة إخراج: let num = 9; if (num <= 3 || num >= 7) {...} else {...}", "A", 0],
+      ["اختر البرنامج الصحيح لإضافة 1 إلى i.", "i++", 1],
+      ["اختر برنامج for لتكرار العملية 10 مرات.", "for (let i=0; i<10; i++) {\n  Process\n}", 1],
+      ["اختر نتيجة إخراج: for (let i = 0; i < 2; i++) { console.log(\"Hello\"); };", "Hello\nHello", 0],
+      ["اطبع \"Good morning\" عشر مرات باستخدام i++.", "for (let i = 0; i < 10; i++) {\n  console.log(\"Good morning\");\n}", 1],
+      ["الناقص: a >= 2 && b >= 3", "let a = 4;\nlet b = 3;\nif (a >= 2 && b >= 3) {\n  console.log(\"Condition met\");\n}", 1],
+      ["النواقص: for + let i = 0; i < 3 ; i++", "for (let i = 0; i < 3 ; i++) {\n  console.log(\"Hello\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 12 ---------- */
+  12: { t: "المستوى 12 — Math + الدوال", s: [
+    { t: "الدرس الأول — Math.round", q: [
+      ["النواقص: 9.8 / 10.3 / 9.2", "console.log(Math.round(9.8));\nconsole.log(Math.round(10.3));\nconsole.log(Math.round(9.2));", 1],
+    ]},
+    { t: "الدرس الثاني — Math.round / max / min", q: [
+      ["أدخل: console.log(Math.round(10.6));", "console.log(Math.round(10.6));", 1],
+      ["قرّب 9.7 باستخدام Math.round واطبعها.", "console.log(Math.round(9.7));", 1],
+      ["أدخل: console.log(Math.max(5,10,50));", "console.log(Math.max(5,10,50));", 1],
+      ["أدخل: console.log(Math.min(5,10,50));", "console.log(Math.min(5,10,50));", 1],
+    ]},
+    { t: "الدرس الثالث — تشغيل كود", q: [
+      ["نضغط تشغيل الكود فقط.", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الرابع — أول دالة split3", q: [
+      ["الناقص: function split3(total) { }", "function split3(total) { }", 1],
+      ["أضف السطر الثاني: let result = total / 3;", "function split3(total) {\n  let result = total / 3;\n  return result;\n}", 1],
+      ["أضف السطر الثالث: return result;", "function split3(total) {\n  let result = total / 3;\n  return result;\n}", 1],
+      ["أضف السطر الخامس: console.log(split3(2800));", "function split3(total) {\n  let result = total / 3;\n  return result;\n}\nconsole.log(split3(2800));", 1],
+    ]},
+    { t: "الدرس الخامس — دالة split5", q: [
+      ["السطر الأول: function split5(total)", "function split5(total)", 1],
+      ["السطر الثاني: let result = total / 5;", "function split5(total) {\n  let result = total / 5;", 1],
+      ["السطر الثالث: return result;", "function split5(total) {\n  let result = total / 5;\n  return result;\n}", 1],
+      ["السطر الأخير: console.log(split5(12500));", "function split5(total) {\n  let result = total / 5;\n  return result;\n}\nconsole.log(split5(12500));", 1],
+      ["السطر الأول: function calc5(num)", "function calc5(num)", 1],
+      ["السطر الثاني: let result = num * 5;", "function calc5(num) {\n  let result = num * 5;", 1],
+      ["السطر الثالث: return result;", "function calc5(num) {\n  let result = num * 5;\n  return result;\n}", 1],
+      ["السطر الخامس: console.log(calc5(10));", "function calc5(num) {\n  let result = num * 5;\n  return result;\n}\nconsole.log(calc5(10));", 1],
+    ]},
+    { t: "مراجعة المستوى 12", q: [
+      ["اختر البرنامج الصحيح لإنشاء دالة calc بمعامل num.", "function calc(num) { processing }", 1],
+      ["اختر الدالة الصحيحة للتقريب.", "Math.round(1.8)", 1],
+      ["اختر نتيجة إخراج: console.log(Math.max(20,40,60));", "60", 0],
+      ["اختر نتيجة إخراج: function calc(num) {...} console.log(calc(5));", "15", 0],
+      ["الناقص: calc(3)", "function calc(num) {\n  let result = num * 5;\n  return result;\n}\nconsole.log(calc(3));", 1],
+      ["الناقص: return result", "function calc(num) {\n  let result = num * 7;\n  return result }\nconsole.log(calc(10));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 13 ---------- */
+  13: { t: "المستوى 13 — Math.floor + random", s: [
+    { t: "الدرس الأول — round / max / min / دالة sum", q: [
+      ["ما الإخراج عند تشغيل Math.round(10.4)؟", "10", 0],
+      ["أدخل: console.log(Math.max(5,50));", "console.log(Math.max(5,50));", 1],
+      ["أخرج القيمتين الأدنى بين 5 و50 باستخدام Math.min.", "console.log(Math.min(5,50));", 1],
+      ["دالة sum تجمع num1 و num2.", "function sum(num1, num2) {\n  let result = num1 + num2;\n  return result;\n}", 1],
+      ["أضف السطر الخامس: console.log(sum(10, 20));", "function sum(num1, num2) {\n  let result = num1 + num2;\n  return result;\n}\nconsole.log(sum(10, 20));", 1],
+    ]},
+    { t: "الدرس الثاني — Math.floor", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["أدخل: console.log(Math.round(10.5)); console.log(Math.floor(10.5));", "console.log(Math.round(10.5));\nconsole.log(Math.floor(10.5));", 1],
+      ["مرّر 7.8 إلى Math.floor وأخرجها.", "console.log(Math.floor(7.8));", 1],
+    ]},
+    { t: "الدرس الثالث — Math.random + if", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["أدخل: console.log(Math.random());", "console.log(Math.random());", 1],
+      ["الناقص: Math.random() >= 0.5", "if (Math.random() >= 0.5) { console.log(\"Lucky today\");} else { console.log(\"Unlucky today\");}", 1],
+    ]},
+    { t: "الدرس الرابع — random + ضرب + floor", q: [
+      ["استدعِ Math.random وأخرجها.", "console.log(Math.random());", 1],
+      ["الناقص: Math.random() * 10", "console.log(Math.random() * 10);", 1],
+      ["الناقص: Math.floor", "console.log(Math.floor(Math.random() * 10));", 1],
+    ]},
+    { t: "مراجعة المستوى 13", q: [
+      ["اختر البرنامج الصحيح لإخراج قيم عشوائية.", "console.log(Math.random());", 1],
+      ["اختر الدالة الصحيحة لقطع الكسور العشرية.", "console.log(Math.floor(10.5));", 1],
+      ["اختر نتيجة إخراج: console.log(Math.floor(7.7));", "7", 0],
+      ["استخدم Math.round لـ 5.5 و Math.floor لـ 8.8.", "console.log(Math.round(5.5))\nconsole.log(Math.floor(8.8))", 1],
+      ["الناقص: Math.random() >= 0.5", "if ( Math.random() >= 0.5) {\n  console.log(\"Excellent luck\");\n} else {\n  console.log(\"Bad luck\");\n}", 1],
+      ["الناقص: Math.floor(Math.random() * 10 )", "console.log(Math.floor(Math.random() * 10 ));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 14 ---------- */
+  14: { t: "المستوى 14 — مراجعة 12–13", s: [
+    { t: "مراجعة من 12 إلى 13", q: [
+      ["قرّب 5.7 باستخدام Math.round.", "console.log( Math.round(5.7));", 1],
+      ["مرّر 5.5 إلى Math.round ثم Math.floor.", "console.log(Math.round(5.5));\nconsole.log(Math.floor(5.5));", 1],
+      ["مرّر 10 و 20 إلى Math.max ثم Math.min.", "console.log(Math.max(10,20));\nconsole.log(Math.min(10,20));", 1],
+      ["استدعِ Math.random وأخرجها.", "console.log(Math.random());", 1],
+      ["دالة split4 تقسّم على 4، ومرّر 1200.", "function split4(total) {\n  let result = total / 4;\n  return result;\n}\nconsole.log(split4(1200));", 1],
+    ]},
+    { t: "اختبار المستوى 14", q: [
+      ["اختر الدالة الصحيحة للتقريب.", "Math.round(1.8)", 1],
+      ["اختر نتيجة إخراج: console.log(Math.max(10,50,100));", "100", 0],
+      ["اختر البرنامج الصحيح لإخراج قيم عشوائية.", "console.log(Math.random());", 1],
+      ["اختر نتيجة إخراج: console.log(Math.floor(12.8));", "12", 0],
+      ["الناقص: Math.floor(Math.random() * 10 )", "console.log(Math.floor(Math.random() * 10 ));", 1],
+      ["اختر البرنامج الصحيح لإنشاء دالة sum بمعامل num.", "function sum(num) { processing }", 1],
+      ["الناقص: return result", "function calc(num) {\n  let result = num * 7;\n  return result\n}\nconsole.log(calc(10));", 1],
+      ["الناقص: calc(7)", "function calc(num) {\n  let result = num * 5;\n  return result;\n}\nconsole.log(calc(7));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 15 ---------- */
+  15: { t: "المستوى 15 — الأنواع و == / ===", s: [
+    { t: "الدرس الأول — الأرقام والنصوص", q: [
+      ["السطر الأول: let fee = 1000; (ثم if موجود).", "let fee = 1000;\nif (fee == 1000) {\n  console.log(\"50 codycoins off\");\n}", 1],
+      ["السطر الأول: let fee = \"1000 codycoins\";", "let fee = \"1000 codycoins\";\nif (fee == \"1000 codycoins\") {\n  console.log(\"50 codycoins off\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — أنواع البيانات", q: [
+      ["ما نوع console.log(\"Good morning.\");؟", "سلسلة نصية", 0],
+      ["ما نوع console.log(10);؟", "القيمة العددية", 0],
+      ["ما نوع console.log(\"5+7\");؟", "سلسلة نصية", 0],
+    ]},
+    { t: "الدرس الثالث — typeof", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["أدخل: console.log(typeof 500); console.log(typeof \"500 codycoins\");", "console.log(typeof 500);\nconsole.log(typeof \"500 codycoins\");", 1],
+      ["حدد نوع البيانات لـ \"100\" وأخرجه.", "console.log(typeof \"100\");", 1],
+    ]},
+    { t: "الدرس الرابع — == و ===", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["الناقص: 1 === 1", "console.log(1 === 1);", 1],
+      ["ما نتيجة console.log(100 == \"100\");؟", "true", 0],
+      ["ما نتيجة console.log(100 === 500);؟", "false", 0],
+      ["ما نتيجة console.log(\"Good morning\" === \"Good morning\");؟", "true", 0],
+      ["ما نتيجة console.log(\"Good morning\" === \"Good night\");؟", "false", 0],
+    ]},
+    { t: "الدرس الخامس — Number و String", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["أدخل: console.log(Number(\"10\")); console.log(String(500));", "console.log(Number(\"10\"));\nconsole.log(String(500));", 1],
+    ]},
+    { t: "مراجعة المستوى 15", q: [
+      ["اختر نوع البيانات الصحيح لـ console.log(\"50+30\");", "String", 0],
+      ["اختر البرنامج الصحيح لإخراج string.", "console.log(typeof \"1\");", 1],
+      ["اختر نتيجة إخراج: console.log(100 === 500);", "false", 0],
+      ["اختر نتيجة إخراج: console.log(Number(\"Hello\"));", "NaN", 0],
+      ["حدد نوع \"7\" واطبعه.", "console.log(typeof \"7\");", 1],
+    ]},
+  ]},
+    /* ---------- المستوى 16 ---------- */
+    16: { t: "المستوى 16 — المصفوفات", s: [
+    { t: "الدرس الأول — تشغيل كود", q: [
+      ["اضغط على \"تشغيل الكود\" بدون تعديل البرنامج.", "تشغيل الكود", 0],
+      ["اضغط على \"تشغيل الكود\" بدون تعديل البرنامج (سؤال ثانٍ).", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الثاني — المصفوفات والوصول للعناصر", q: [
+      ["أدخل: let tempList = [36, 36, 26, 27, 28, 33, 36];", "let tempList = [36, 36, 26, 27, 28, 33, 36];", 1],
+      ["الناقص في السطر الثاني: console.log(tempList[2]);", "let tempList = [36, 36, 26, 27, 28, 33, 36];\nconsole.log(tempList[2]);", 1],
+      ["استخرج 33 من tempList وأخرجها.", "let tempList = [36, 36, 26, 27, 28, 33, 36];\nconsole.log(tempList[5]);", 1],
+      ["أخرج قيمة tempList كاملة.", "let tempList = [36, 36, 26, 27, 28, 33, 36];\nconsole.log(tempList);", 1],
+    ]},
+    { t: "الدرس الثالث — مجموع ومتوسط المصفوفة", q: [
+      ["أدخل: let tempList = [36, 36, 26, 27, 28, 33, 36];", "let tempList = [36, 36, 26, 27, 28, 33, 36];", 1],
+      ["احسب مجموع tempList وأخرجه.", "let tempList = [36, 36, 26, 27, 28, 33, 36];\nlet total = 0;\nfor(let i = 0; i < 7; i++){\n  total = total + tempList[i];\n}\nconsole.log(total);", 1],
+      ["الناقص: total / 7", "let tempList = [36, 36, 26, 27, 28, 33, 36];\nlet total = 0;\nfor(let i = 0; i < 7; i++){\n  total = total + tempList[i];\n}\nconsole.log(total / 7);", 1],
+    ]},
+    { t: "الدرس الرابع — متوسط مسافة الجري", q: [
+      ["أعلن runLogs = [5, 2, 4, 1, 3, 3];", "let runLogs = [5, 2, 4, 1, 3, 3];", 1],
+      ["احسب مجموع runLogs وأخرجه.", "let runLogs = [5, 2, 4, 1, 3, 3];\nlet total = 0;\nfor (let i = 0; i < 6; i++) {\n  total = total + runLogs[i];\n}\nconsole.log(total);", 1],
+      ["أضف: console.log(total / 6);", "let runLogs = [5, 2, 4, 1, 3, 3];\nlet total = 0;\nfor (let i = 0; i < 6; i++) {\n  total = total + runLogs[i];\n}\nconsole.log(total / 6);", 1],
+      ["احسب متوسط خطوات steps.", "let steps = [16000, 12000, 14605, 9920, 13805, 14500];\nlet total = 0;\nfor (let i = 0; i < 6; i++) {\n  total = total + steps[i];\n}\nconsole.log(total / 6);", 1],
+    ]},
+    { t: "الدرس الخامس — length والإضافة", q: [
+      ["أضف 30, 28, 29 إلى tempList.", "let tempList = [36, 36, 26, 27, 28, 33, 36, 30, 28, 29];", 1],
+      ["أضف: console.log(tempList.length);", "let tempList = [36, 36, 26, 27, 28, 33, 36, 30, 28, 29];\nconsole.log(tempList.length);", 1],
+      ["أخرج طول المصفوفة.", "let tempList = [36, 36, 26, 27, 28, 33, 36, 30, 28, 29, 26, 30, 31, 28];\nconsole.log(tempList.length);", 1],
+    ]},
+    { t: "مراجعة المستوى 16", q: [
+      ["ضع القيم 5, 10, 15 في المصفوفة.", "let num = [5,10,15 ];", 1],
+      ["اختر نتيجة إخراج: let num = [5, 10, 15, 20, 25]; console.log(num[2]);", "15", 0],
+      ["اطبع جميع القيم في المصفوفة.", "let num = [5, 10, 15, 20, 25];\nconsole.log(num);", 1],
+      ["اختر نتيجة إخراج: let num = [1, 2, 3]; let sum = 0; for (let i = 0; i < 3; i++) { sum = sum + num[i]; } console.log(sum);", "6", 0],
+      ["اطبع طول المصفوفة.", "let num = [5, 10, 15, 20, 25];\nconsole.log(num.length);", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 17 ---------- */
+  17: { t: "المستوى 17 — مراجعة 15–16", s: [
+    { t: "مراجعة من 15 إلى 16", q: [
+      ["أدخل: console.log(typeof 500); console.log(typeof \"500codycoins\");", "console.log(typeof 500);\nconsole.log(typeof \"500codycoins\");", 1],
+      ["أدخل: console.log(1 === \"1\");", "console.log(1 === \"1\");", 1],
+      ["أدخل: console.log(Number(\"5\")); console.log(String(10));", "console.log(Number(\"5\"));\nconsole.log(String(10));", 1],
+      ["درجات الحرارة: 10, 15, 13, 16, 14, 12, 17. أخرج القيمة الثالثة.", "let tempList = [10, 15, 13, 16, 14, 12, 17];\nconsole.log(tempList[2]);", 1],
+      ["درجات الحرارة: 5, 8, 7, 10, 6, 9. أسندها إلى tempList.", "let tempList = [5, 8, 7, 10, 6, 9];", 1],
+      ["احسب متوسط درجة الحرارة خلال 6 أيام.", "let tempList = [5, 8, 7, 10, 6, 9];\nlet total = 0;\nfor (let i = 0; i < 6; i++) {\n  total = total + tempList[i];\n}\nconsole.log(total / 6);", 1],
+      ["الناقص: tempList.length", "let tempList = [5, 8, 7, 10, 6, 9, 10, 7, 6, 11, 13, 8, 8, 7];\nconsole.log(tempList.length);", 1],
+    ]},
+    { t: "مراجعة المستوى 17", q: [
+      ["اختر نوع البيانات الصحيح لـ console.log(\"11\");", "String", 0],
+      ["اختر البرنامج الصحيح لإخراج \"string\".", "console.log(typeof \"50\");", 1],
+      ["اختر نتيجة إخراج: console.log(200 === 20);", "false", 0],
+      ["اختر نتيجة إخراج: console.log(Number(\"value\"));", "NaN", 0],
+      ["حدد نوع البيانات 100 واطبعه.", "console.log(typeof 100)", 1],
+      ["ضع القيم 10, 50, 100, 150 في المصفوفة.", "let num = [10, 50, 100, 150 ];", 1],
+      ["اختر نتيجة إخراج: let num = [5, 10, 15, 20, 25]; console.log(num[3]);", "20", 0],
+      ["اطبع جميع القيم في المصفوفة.", "let num = [2, 4, 6, 8, 10];\nconsole.log(num);", 1],
+      ["اختر نتيجة إخراج: let num = [2, 4, 6]; let sum = 0; for (let i = 0; i < 3; i++) { sum = sum + num[i]; } console.log(sum);", "12", 0],
+      ["اطبع طول المصفوفة.", "let num = [2, 4, 6, 8, 10];\nconsole.log(num.length );", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 18 ---------- */
+  18: { t: "المستوى 18 — HTML (أساسيات)", s: [
+    { t: "الدرس الثاني — وسوم HTML الأساسية", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: <h1> و </h1> حول Cody's Notepad.", "<h1>Cody's Notepad</h1>", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: <h3></h3> و <h6></h6>.", "<h3>Cody's Notepad</h3>\n<h6>Today's shopping list</h6>", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["أضف في السطر الثالث: <p>Bread</p>", "<h1>Cody's Notepad</h1>\n<h2>Today's shopping list</h2>\n<p>Bread</p>", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: <br> و <br> بين Bread و Ham و Cheese.", "<h1>Cody's Notepad</h1>\n<h2>Today's shopping list</h2>\n<p>Bread<br>\nHam<br>\nCheese</p>", 1],
+    ]},
+    { t: "الدرس الثالث — القوائم", q: [
+      ["قائمة تسوق بـ h1, h2, p, br.", "<h1>Rick's Notebook</h1>\n<h2>Shopping List</h2>\n<p>Tomato<br>\nOnion<br>\nMushroom<br>\nGarlic</p>", 1],
+      ["قائمة نقطية ul/li لعناصر Tomato, Onion, Mushroom, Garlic.", "<h1>Shopping List</h1>\n<ul>\n<li>Tomato</li>\n<li>Onion</li>\n<li>Mushroom</li>\n<li>Garlic</li>\n</ul>", 1],
+      ["نفس القائمة النقطية السابقة (تأكيد).", "<h1>Shopping List</h1>\n<ul>\n<li>Tomato</li>\n<li>Onion</li>\n<li>Mushroom</li>\n<li>Garlic</li>\n</ul>", 1],
+      ["قائمة مرقمة ol/li لجدول الحصص.", "<h1>Tomorrow's Schedule</h1>\n<ol>\n<li>Science</li>\n<li>Math</li>\n<li>Music</li>\n<li>History</li>\n<li>Physical Education</li>\n</ol>", 1],
+      ["نفس القائمة المرقمة السابقة (تأكيد).", "<h1>Tomorrow's Schedule</h1>\n<ol>\n<li>Science</li>\n<li>Math</li>\n<li>Music</li>\n<li>History</li>\n<li>Physical Education</li>\n</ol>", 1],
+    ]},
+    { t: "الدرس الرابع — الصور والـ alt", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["أضف <img> داخل li في السطر الثالث.", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<img></li>\n<li>Japanese rice omelette</li>\n</ul>", 1],
+      ["أضف src=\"curry.png\" إلى img.", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<img src=\"curry.png\"></li>\n<li>Japanese rice omelette</li>\n</ul>", 1],
+      ["الناقص في السطر الثالث: <br>", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<br><img src=\"curry.png\"></li>\n<li>Japanese rice omelette</li>\n</ul>", 1],
+      ["أضف omelette.png في السطر الرابع.", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<br><img src=\"curry.png\"></li>\n<li>Japanese rice omelette<br><img src=\"omelette.png\"></li>\n</ul>", 1],
+      ["أضف pasta.png في السطر الخامس.", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<br><img src=\"curry.png\"></li>\n<li>Japanese rice omelette<br><img src=\"omelette.png\"></li>\n<li>Pasta<br><img src=\"pasta.png\"></li>\n</ul>", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: alt للصورتين.", "<h1>Cooking Wishlist</h1>\n<ul>\n<li>Curry rice<br><img src=\"miss.png\" alt=\"Rice with spicy sauce\"></li>\n<li>Japanese rice omelette<br><img src=\"miss.png\" alt=\"Japanese rice omelette with ketchup\"></li>\n<li>Pasta<br><img src=\"pasta.png\" alt=\"Tomato sauce pasta\"></li>\n</ul>", 1],
+    ]},
+    { t: "الدرس الخامس — قائمة مشروبات وتعليقات", q: [
+      ["الناقص: <h1>, </h1>, <p>, <br>, </p>", "<h1>Drink Menu</h1>\n<p>Orange juice: 200 codycoins<br>\nApple juice: 150 codycoins</p>", 1],
+      ["الناقص: <!-- و -->  لجعل السطر الأول تعليقًا.", "<!-- Prices will be revised next week. -->\n<h1>Drink Menu</h1>\n<p>Orange juice: 200 codycoins<br>\nApple juice: 150 codycoins</p>", 1],
+      ["كيف كانت تجربتك الأولى مع HTML؟", "لقد كانت ممتعة!", 0],
+    ]},
+    { t: "مراجعة المستوى 18", q: [
+      ["أحط النص Hello بوسم h1.", "<h1>Hello</h1>", 1],
+      ["اختر الطريقة الصحيحة لكتابة وسم p.", "<p>Hello</p>", 1],
+      ["اختر الوسم المناسب لكسر السطر.", "br tag", 0],
+      ["اختر الوسم المناسب لقائمة منقطة.", "ul tag", 0],
+      ["اعرض قائمة ol تحتوي 3 عناصر.", "1.Cut ingredients\n2.Stir-fry\n3.Add seasonings", 0],
+      ["اختر الوسم لعرض صورة image.png.", "<img src=\"image.png\">", 1],
+      ["اختر خاصية alt بشكل صحيح.", "<img alt=\"This is an image.\">", 1],
+      ["الناقص: <!-- و -->  لجعل السطر الأول تعليقًا.", "<!--The h1 tag is a heading.-->\n<h1>Hello</h1>", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 19 ---------- */
+  19: { t: "المستوى 19 — CSS (أساسيات)", s: [
+    { t: "الدرس الأول — color و background", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["اجعل h1 أحمر.", "h1{\n  color: red;\n}", 1],
+      ["عدّل لون h1 إلى أزرق.", "h1{\n  color: blue;\n}", 1],
+      ["اجعل p أحمر مع h1 أزرق.", "h1{\n  color: blue;\n}\np{\n  color: red;\n}", 1],
+      ["الناقص: background-color: yellow;", "h1{\n  color: blue;\n  background-color: yellow;\n}\np{\n  color: red;\n}", 1],
+      ["الناقص: background-color: orange;", "h1{\n  color: red;\n  background-color: yellow;\n}\np{\n  color: blue;\n  background-color: orange;\n}", 1],
+    ]},
+    { t: "الدرس الثاني — font-weight و font-size", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["اجعل p عريضًا.", "p {\n  font-weight: bold;\n}", 1],
+      ["اجعل p بسُمك عادي.", "p {\n  font-weight: normal;\n}", 1],
+      ["الناقص: 900", "p {\n  font-weight: 900;\n}", 1],
+      ["صغّر حجم النص إلى 10px.", "p {\n  font-size : 10px;\n}", 1],
+      ["كبّر حجم النص إلى 50px.", "p {\n  font-size : 50px;\n}", 1],
+    ]},
+    { t: "الدرس الثالث — classes", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["اجعل p أزرق ثم أخضر (قاعدتين).", "p{\n  color: blue;\n}\np{\n  color: green;\n}", 1],
+      ["الناقص: class=\"sea\" و class=\"mountains\"", "<p class=\"sea\">Let's go to the sea.</p>\n<p class=\"mountains\">Let's go to the mountains.</p>", 1],
+      ["الناقص: .sea و .mountains", ".sea{\n  color: blue;\n}\n.mountains{\n  color: green;\n}", 1],
+      ["الناقص: class=\"apple\" و class=\"watermelon\"", "<p class=\"apple\">Apple</p>\n<p class=\"watermelon\">Watermelon</p>", 1],
+      ["اجعل apple أحمر و watermelon أخضر.", ".apple{\n  color:red;\n}\n.watermelon{\n  color:green;\n}", 1],
+    ]},
+    { t: "الدرس الرابع — التعليقات", q: [
+      ["الناقص: /* و */  في بداية الكود.", "/* Change the color of the text of the h1 tag to red. */\nh1{\n  color: red;\n}", 1],
+      ["الناقص: <!-- و -->  في HTML.", "<!-- Let's give a class name -->\n<p class=\"apple\">Apple</p>\n<p class=\"watermelon\">Watermelon</p>", 1],
+    ]},
+    { t: "مراجعة المستوى 19", q: [
+      ["حدد h1 كـ selector بلون أحمر.", "h1{\n  color: red;\n}", 1],
+      ["الناقص: blue; لضبط اللون.", "h1 {\n  color:blue;\n}", 1],
+      ["اختر الوصف الصحيح لـ color.", "تغيير لون النص", 0],
+      ["اختر الوصف الصحيح لـ background-color.", "تغيير لون الخلفية", 0],
+      ["اختر الوصف الصحيح لـ font-weight: bold.", "يصبح النص عريضًا", 0],
+      ["اختر القيمة الصحيحة لـ font-size.", "font-size: 10px;", 1],
+      ["الناقص: .dog (لجعل Dog أزرق).", ".dog{\n  color: blue;\n}", 1],
+      ["الناقص: /* و */  لتعليق في السطر الأول.", "/* Change the text color to navy. */\np {\n  color: navy;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 20 ---------- */
+  20: { t: "المستوى 20 — مراجعة 18–19", s: [
+    { t: "مراجعة من 18 إلى 19", q: [
+      ["h1 لعرض Travel Itinerary، h2 لعرض Packing List.", "<h1>Travel Itinerary</h1>\n<h2>Packing List</h2>", 1],
+      ["p لعرض Wallet, Hat, Handkerchief مع br بعد Wallet و Hat.", "<h1>Travel Itinerary</h1>\n<h2>Packing List</h2>\n<p>Wallet<br>\nHat<br>\nHandkerchief</p>", 1],
+      ["قائمة نقطية لـ Wallet, Hat, Handkerchief.", "<h1>Travel Itinerary</h1>\n<h2>Packing List</h2>\n<ul>\n<li>Wallet</li>\n<li>Hat</li>\n<li>Handkerchief</li>\n</ul>", 1],
+      ["قائمة مرقمة لطريقة عمل حساء الطماطم.", "<h1>How to Make Tomato Soup</h1>\n<ol>\n<li>Boil water</li>\n<li>Add ingredients</li>\n<li>Adjust the seasoning</li>\n</ol>", 1],
+      ["أضف صورة cody.png في السطر الثالث.", "<h1>Cody's Page</h1>\n<p>My name is Cody.</p>\n<img src=\"cody.png\">", 1],
+      ["أضف alt لصورة كودي.", "<h1>Cody's Page</h1>\n<p>My name is Cody.</p>\n<img src=\"miss.png\" alt=\"Cody's striking pose\">", 1],
+      ["اجعل h1 أحمر.", "h1{ color: red; }", 1],
+      ["اجعل خلفية h1 أصفر و p عريضًا.", "h1 {\n  color: red;\n  background-color: yellow;\n}\np {\n  font-weight: bold;\n}", 1],
+      ["أضف classes japanese, english, french إلى فقرات.", "<h1>Greetings of the World</h1>\n<p class=\"japanese\">Konnichiwa</p>\n<p class=\"english\">Hello</p>\n<p class=\"french\">Bonjour</p>", 1],
+      ["أضف قواعد CSS للأصناف japanese/english/french.", "h1 {\n  color: red;\n  background-color: yellow;\n}\np {\n  font-weight: bold;\n}\n.japanese{\n  color: lime;\n}\n.english{\n  color: purple;\n}\n.french{\n  color: navy;\n}", 1],
+    ]},
+    { t: "مراجعة واختبار المستوى 20", q: [
+      ["ضع النص Good morning داخل وسم p.", "<p>Good morning</p>", 1],
+      ["اختر الوسم المناسب لكسر السطر.", "br tag", 0],
+      ["اختر الوسم لعرض صورة image.png.", "<img src=\"image.png\">", 1],
+      ["اختر نوع العرض لقائمة ul تحتوي strawberry, cherry, orange.", "strawberry・\ncherry・\norange・", 0],
+      ["حدد القيمة yellow.", "h1 {\n  color:yellow\n}", 1],
+      ["اختر الوصف الصحيح لـ background-color.", "تغيير لون الخلفية", 0],
+      ["اختر الوصف الصحيح لـ font-weight: bold.", "يصبح الخط عريضًا", 0],
+      ["حدد h3 كـ selector بلون أحمر.", "h3{\n  color: red;\n}", 1],
+      ["اجعل .fish أزرق.", ".fish{\n  color: blue;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 21 ---------- */
+  21: { t: "المستوى 21 — الشروط المتقدمة", s: [
+    { t: "الدرس الأول — if / else if / else", q: [
+      ["أعلن science = 100، إذا كانت 100 اطبع \"Reward: steak\".", "let science = 100;\nif (science == 100) {\n  console.log(\"Reward: steak\");\n}", 1],
+      ["أضف else if و else بعد السطر الرابع.", "let science = 80;\nif (science == 100) {\n  console.log(\"Reward: steak\");\n} else if ( science >= 80 ){\n  console.log(\"Reward: ice cream\");\n} else {\n  console.log(\"No games for 1 week.\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — شروط متعددة (&& و ||)", q: [
+      ["الناقص: score >= 80", "let score = 100;\nif (score >= 80) {\n  console.log(\"Pass\");\n}", 1],
+      ["الناقص: score <= 40", "let score = 30;\nif (score <= 40) {\n  console.log(\"Retest\");\n}", 1],
+      ["الناقص: numberOfPeople >= 3 && total == 3333", "let numberOfPeople = 3;\nlet total = 3333;\nif (numberOfPeople >= 3 && total == 3333) {\n  console.log(\"30% discount\");\n}", 1],
+      ["الناقص: numberOfPeople >= 10 || total >= 12000", "let numberOfPeople = 4;\nlet total = 13500;\nif (numberOfPeople >= 10 || total >= 12000) {\n  console.log(\"Small Gift Present\");\n}", 1],
+    ]},
+    { t: "الدرس الثالث — نطاق المتغيرات (scope)", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["هل ينتج خطأ؟ bonus معلن خارج if.", "لا ينتج عنه خطأ", 0],
+      ["هل ينتج خطأ؟ bonus معلن داخل if.", "ينتج عنه خطأ", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثالث).", "تشغيل الكود", 0],
+      ["هل ينتج خطأ؟ treat معلن داخل if.", "ينتج عنه خطأ", 0],
+    ]},
+    { t: "الدرس الرابع — if متداخل (تجربة)", q: [
+      ["غيّر score=90 و rank=1 - شغّل الكود.", "تشغيل الكود", 0],
+      ["غيّر rank من 1 إلى 3 - شغّل الكود.", "تشغيل الكود", 0],
+      ["غيّر score من 90 إلى 75 و rank=1 - شغّل الكود.", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الخامس — if متداخل عملي", q: [
+      ["أعلن score = 90، إذا ≥ 80 اطبع Test Passed.", "let score = 90;\nif (score >= 80) {\n  console.log(\"Test Passed\");\n}", 1],
+      ["if متداخل: Test Passed ثم Trophy Acquired.", "let score = 90;\nlet rank = 1;\nif (score >= 80) {\n  console.log(\"Test Passed\");\n  if (rank == 1) {\n    console.log(\"Trophy Acquired\");\n  }\n}", 1],
+      ["أعلن rank = 1، إذا كان 1 اطبع Regional Champion.", "let rank = 1;\nif (rank == 1) {\n  console.log(\"Regional Champion\");\n}", 1],
+      ["أضف fishCaught = 27 و if متداخل للتحقق من ≥ 30.", "let rank = 1;\nlet fishCaught = 27;\nif (rank == 1) {\n  console.log(\"Regional Champion\");\n  if (fishCaught >= 30) {\n    console.log(\"New Tournament Record\");\n  }\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 21", q: [
+      ["اختر التعبير الشرطي \"score يساوي 50\".", "score == 50", 1],
+      ["الناقص: else if(A < B)", "let A = 5\nlet B = 10\nif (A > B) {\n  console.log(\"A is larger\");\n} else if(A < B) {\n  console.log(\"B is larger\");\n}", 1],
+      ["اختر التعبير الشرطي \"A أصغر من B\".", "A < B", 1],
+      ["اختر البرنامج الذي يمثل \"score ≥ 50\".", "score >= 50", 1],
+      ["اختر عامل AND.", "&&", 0],
+      ["اختر عامل OR.", "||", 0],
+      ["الناقص: numberOfPeople <= 10 || weight <= 800", "let numberOfPeople = 8;\nlet weight = 400;\nif (numberOfPeople <= 10 || weight <= 800) {\n  console.log(\"You can ride the elevator\");\n}", 1],
+      ["اختر نتيجة إخراج البرنامج: math=100 ثم fee داخل if.", "ينتج عنه خطأ", 0],
+      ["أنشئ if متداخل بدون && لطباعة الرسالتين.", "let math = 100;\nlet science = 100;\nif (math == 100) {\n  console.log(\"Math is 100 points\");\n  if (science == 100) {\n    console.log(\"Math and science are 100 points\");\n  }\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 22 ---------- */
+  22: { t: "المستوى 22 — التكرار 2", s: [
+    { t: "الدرس الأول — for basics", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: for ( let i = 0; i < 3; i++ )", "for ( let i = 0; i < 3; i++ ) {\n  console.log(\"She sells seashells by the seashore.\");\n}", 1],
+      ["الناقص: for ( let i = 0; i < 3; i++ )", "for ( let i = 0; i < 3; i++ ) {\n  console.log(\"Six slippery snails slid slowly seaward.\");\n}", 1],
+      ["اطبع silk عشر مرات.", "for ( let i = 0; i < 10; i++ ) {\n  console.log(\"silk\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — Scope", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["ما اسم النطاق الذي يمكن الوصول فيه للمتغير؟", "Scope", 0],
+      ["هل ينتج خطأ؟ i بعد for loop.", "ينتج عنه خطأ", 0],
+      ["هل ينتج خطأ؟ for loop كامل وحده.", "لا ينتج عنه خطأ", 0],
+      ["هل ينتج خطأ؟ num داخل for.", "لا ينتج عنه خطأ", 0],
+    ]},
+    { t: "الدرس الثالث — for مع if", q: [
+      ["ما العادة اليومية التي بدأها ريكي؟", "تمارين البطن", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["اطبع sit-up 5 مرات.", "for (let i = 0; i < 5; i++) {\n  console.log(\"sit-up\");\n}", 1],
+      ["أضف if (i == 2) لطباعة running.", "for (let i = 0; i < 5; i++) {\n  console.log(\"sit-up\");\n  if (i == 2) {\n    console.log(\"running\");\n  }\n}", 1],
+    ]},
+    { t: "الدرس الرابع — for مع if (حالات)", q: [
+      ["اطبع lunch box 5 مرات.", "for (let i = 0; i < 5; i++) {\n  console.log(\"lunch box\");\n}", 1],
+      ["أضف if (i == 1) لطباعة library book.", "for (let i = 0; i < 5; i++) {\n  console.log(\"lunch box\");\n  if (i == 1) {\n    console.log(\"library book\");\n  }\n}", 1],
+      ["أضف if (i == 3) لطباعة fruit.", "for (let i = 0; i < 5; i++) {\n  console.log(\"lunch box\");\n  if (i == 3) {\n    console.log(\"fruit\");\n  }\n}", 1],
+    ]},
+    { t: "الدرس الخامس — += ", q: [
+      ["عدّل الكود ليصبح: let i = 0; i += 3; console.log(i);", "let i = 0;\ni += 3;\nconsole.log(i);", 1],
+      ["عدّل الكود ليصبح: num += 5 بدل num = num + 5.", "let num = 0;\nnum += 5;\nconsole.log(num);", 1],
+    ]},
+    { t: "مراجعة المستوى 22", q: [
+      ["ما أول شيء يجب كتابته في برنامج for؟", "for", 0],
+      ["اختر البرنامج الصحيح لإضافة 1 إلى i.", "i++", 1],
+      ["اختر البرنامج الصحيح لتكرار العملية 10 مرات.", "for (let i = 0; i < 10; i++) {\n  specified process;\n}", 1],
+      ["الناقص: let i = 0; i < 3; i++", "for (let i = 0; i < 3; i++) {\n  console.log(\"Programming\");\n}", 1],
+      ["اطبع Good morning 7 مرات.", "for ( let i = 0; i < 7; i++){\n  console.log(\"Good morning\");\n}", 1],
+      ["اختر نتيجة إخراج: for ... let num = 100 ... console.log(num);", "يؤدي إلى خطأ", 0],
+      ["أضف if (i == 4) لطباعة End.", "for (let i = 0; i < 5; i++) {\n  console.log(\"sit-ups\");\n  if (i == 4) {\n    console.log(\"End\");\n  }\n}", 1],
+      ["اختر نتيجة إخراج: for مع if (i == 1) لطباعة B.", "AABA", 0],
+      ["اختر إعادة كتابة i = i + 2.", "i += 2", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 23 ---------- */
+  23: { t: "المستوى 23 — الدوال", s: [
+    { t: "الدرس الأول — تعريف دوال", q: [
+      ["دالة divide6 تقسّم على 6.", "function divide6(total) {\n  let per = total / 6;\n  return per;\n}", 1],
+      ["أضف: console.log(divide6(72));", "function divide6(total) {\n  let per = total / 6;\n  return per;\n}\nconsole.log(divide6(72));", 1],
+      ["دالة split5 مع تمرير 6250.", "function split5(total) {\n  let per = total / 5;\n  return per;\n}\nconsole.log(split5(6250));", 1],
+    ]},
+    { t: "الدرس الثاني — Scope", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["ما اسم النطاق الذي تكون فيه المتغيرات قابلة للاستخدام؟", "Scope", 0],
+      ["هل يؤدي هذا إلى خطأ؟ result خارج الدالة.", "تؤدي إلى حدوث خطأ", 0],
+      ["هل يؤدي هذا إلى خطأ؟ استدعاء divide6(72).", "لا تؤدي إلى خطأ", 0],
+    ]},
+    { t: "الدرس الثالث — دالة بدون معاملات", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["دالة goodMorning بدون معاملات.", "function goodMorning() {\n  let greeting = \"Good morning!\";\n  return greeting;\n}\nconsole.log(goodMorning());", 1],
+    ]},
+    { t: "الدرس الرابع — دالة بمعاملين", q: [
+      ["دالة sum تجمع num1 و num2.", "function sum(num1, num2) {\n  let result = num1 + num2;\n  return result;\n}", 1],
+      ["أضف استدعاء sum(50, 100).", "function sum(num1, num2) {\n  let result = num1 + num2;\n  return result;\n}\nconsole.log(sum(50, 100));", 1],
+    ]},
+    { t: "مراجعة المستوى 23", q: [
+      ["دالة move بدون معاملات.", "function move() {\n  Program to Run\n}", 1],
+      ["اختر نتيجة إخراج: console.log(calc(50)); مع calc(num)=num+5.", "55", 0],
+      ["اختر نتيجة إخراج: console.log(calc(3)); مع calc(number)=number*10.", "30", 0],
+      ["استدعِ divide5(35).", "function divide5(total) {\n  let num = total / 5;\n  return num;\n}\nconsole.log(divide5(35));", 1],
+      ["اختر نتيجة إخراج: console.log(answer); مع answer داخل دالة.", "ينتج عنه خطأ", 0],
+      ["دالة goodNight بدون معاملات.", "function goodNight() {\n  let greeting = \"Good night!\";\n  return greeting;\n}\nconsole.log(goodNight());", 1],
+      ["أضف: console.log(mul(9,7));", "function mul(num1, num2) {\n  let answer = num1 * num2;\n  return answer;\n}\nconsole.log(mul(9,7));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 24 ---------- */
+  24: { t: "المستوى 24 — مراجعة 21–23", s: [
+    { t: "مراجعة الدروس 21–23", q: [
+      ["أعلن score = 82 مع الشروط الثلاثة.", "let score = 82;\nif (score == 100) {\n  console.log(\"Perfect Score\");\n} else if (score >= 75) {\n  console.log(\"Pass\");\n} else {\n  console.log(\"Retest\");\n}", 1],
+      ["هل ينتج خطأ؟ prize داخل if.", "ينتج عنه خطأ", 0],
+      ["هل ينتج خطأ؟ for loop فقط.", "لا ينتج عنه خطأ", 0],
+      ["هل ينتج خطأ؟ result خارج الدالة.", "ينتج عنه خطأ", 0],
+      ["if متداخل بدون &&: Test Passed / Trophy Acquired.", "let score = 90;\nlet rank = 1;\nif (score >= 80) {\n  console.log(\"Test Passed\");\n  if (rank == 1) {\n    console.log(\"Trophy Acquired\");\n  }\n}", 1],
+      ["اطبع Apple, Apple, Banana, Apple (for مع if i==1).", "for (let i = 0; i < 3; i++) {\n  console.log(\"Apple\");\n  if (i == 1) {\n    console.log(\"Banana\");\n  }\n}", 1],
+      ["دالة goodNight بلا معاملات.", "function goodNight(){\n  let greeting = \"Good night!\";\n  return greeting;\n}\nconsole.log(goodNight());", 1],
+      ["دالة calc بمعاملين تضرب.", "function calc(num1, num2) {\n  let result = num1 * num2;\n  return result;\n}\nconsole.log(calc(55, 75));", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 24", q: [
+      ["أضف else if (A < B).", "let A = 5\nlet B = 10\nif (A > B) {\n  console.log(\"A is larger\");\n} else if (A < B) {\n  console.log(\"B is larger\");\n}", 1],
+      ["اختر عامل AND.", "&&", 0],
+      ["if متداخل بدون && لطباعة النتيجتين.", "let science = 100;\nlet math = 100;\nif (science == 100) {\n  console.log(\"Science is 100 points\");\n  if (math == 100) {\n    console.log(\"Science and Math are 100 points\");\n  }\n}", 1],
+      ["اطبع Good morning 7 مرات.", "for (let i=0 ; i < 7 ; i++){\n  console.log(\"Good morning\");\n}", 1],
+      ["اختر نتيجة إخراج: num داخل for خارج.", "ينتج عنه خطأ", 0],
+      ["اختر نتيجة إخراج: for مع if (i==2) لطباعة 1.", "00010", 0],
+      ["اختر إعادة كتابة i = i + 5.", "i += 5", 1],
+      ["استدعِ divide3(12345).", "function divide3(num) {\n  let result = num / 3;\n  return result;\n}\nconsole.log(divide3(12345));", 1],
+      ["دالة move بدون معاملات.", "function move() {\n  Program to Run\n}", 1],
+      ["دالة mul بمعاملين، ومرر 9 و 7.", "function mul(num1,num2) {\n  let result = num1 * num2;\n  return result;\n}\nconsole.log(mul(9,7));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 25 ---------- */
+  25: { t: "المستوى 25 — التكرار 3", s: [
+    { t: "الدرس الأول — تكرار الضرب", q: [
+      ["ما نوع البرنامج لتكرار الضرب؟", "حلقة for", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثالث).", "تشغيل الكود", 0],
+    ]},
+    { t: "الدرس الثاني — حساب الأسس", q: [
+      ["احسب 2×2×2×2×2 باستخدام for.", "let num = 1;\nfor (let i = 0; i < 5; i++) {\n  num = num * 2;\n}\nconsole.log(num);", 1],
+      ["احسب 4×4×4×4.", "let num = 1;\nfor (let i = 0; i < 4; i++) {\n  num = num * 4;\n}\nconsole.log(num);", 1],
+      ["الناقص: let i = 1; i <= 4; i++", "let num = 1;\nfor (let i = 1; i <= 4; i++) {\n  num = num * 4;\n}\nconsole.log(num);", 1],
+    ]},
+    { t: "الدرس الثالث — العامل (factorial)", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["احسب 1×2×3×4×5.", "let num = 1;\nfor (let i = 1; i <= 5; i++) {\n  num = num * i;\n}\nconsole.log(num);", 1],
+      ["احسب 1×2×3×4×5×6×7×8×9×10.", "let num = 1;\nfor (let i = 1; i <= 10; i++) {\n  num = num * i;\n}\nconsole.log(num);", 1],
+    ]},
+    { t: "مراجعة المستوى 25", q: [
+      ["اختر نتيجة إخراج: let num = 1; for (let i = 0; i < 3; i++) { num = num * 2; } console.log(num);", "8", 0],
+      ["احسب 7×7×7×7×7.", "let num = 1;\nfor(let i = 0; i < 5; i++){\n  num = num * 7;\n}\nconsole.log(num);", 1],
+      ["كيف تتغير i في for (i=1; i<=7; i++)؟", "1→2→3→4→5→6→7", 0],
+      ["احسب 0+1+2+3+4+5.", "let num = 0;\nfor (let i = 0; i < 6; i++) {\n  num = num + i;\n}\nconsole.log(num);", 1],
+      ["احسب 5040÷1÷2÷3÷4÷5.", "let num = 5040;\nfor(let i = 1; i <= 5; i++){\n  num = num / i;\n}\nconsole.log(num);", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 26 ---------- */
+  26: { t: "المستوى 26 — المصفوفات 2", s: [
+    { t: "الدرس الأول — الوصول للعناصر", q: [
+      ["ما اسم البرنامج الذي يجمع عدة قيم؟", "مصفوفة (Array)", 0],
+      ["أسند درجات الحرارة 36.2, 36.5, 36.3, 36.8, 36.4 إلى tempList.", "let tempList = [36.2, 36.5, 36.3, 36.8, 36.4];", 1],
+      ["ما ناتج: let tempList = [36.2, 36.5, 36.3, 36.8, 36.4]; console.log(tempList[2]);", "36.3", 0],
+      ["أضف: console.log(tempList[2]);", "let tempList = [36.2, 36.5, 36.3, 36.8, 36.4];\nconsole.log(tempList[2]);", 1],
+      ["أخرج 36.8 من tempList.", "let tempList = [36.2, 36.5, 36.3, 36.8, 36.4];\nconsole.log(tempList[3]);", 1],
+    ]},
+    { t: "الدرس الثاني — متوسط الحرارة", q: [
+      ["أسند 7 درجات حرارة إلى tempList.", "let tempList = [36.2, 36.5, 36.3, 36.8, 36.4, 36.9, 37.0];", 1],
+      ["احسب متوسط 7 أيام.", "let tempList = [36.2, 36.5, 36.3, 36.8, 36.4, 36.9, 37.0];\nlet sum = 0;\nfor(let i = 0; i < 7; i++){\n  sum = sum + tempList[i];\n}\nconsole.log(sum / 7);", 1],
+      ["ما درجة حرارة جسم كودي؟", "خمن أي اختيار لا مشكلة", 0],
+    ]},
+    { t: "الدرس الثالث — length ومتوسط 14", q: [
+      ["أضف: console.log(tempList.length);", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nconsole.log(tempList.length);", 1],
+      ["الناقص: 14 في مكانين.", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nlet sum = 0;\nfor (let i = 0; i < 14; i++) {\n  sum = sum + tempList[i];\n}\nconsole.log(sum / 14);", 1],
+      ["الناقص: let i = 0; i < tempList.length; i++ و tempList.length", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nlet sum = 0;\nfor(let i = 0; i < tempList.length; i++ ){\n  sum = sum + tempList[i];\n}\nconsole.log(sum / tempList.length );", 1],
+    ]},
+    { t: "الدرس الرابع — البحث في المصفوفة", q: [
+      ["اطبع \"Be careful!\" إذا وُجدت حرارة ≥ 37.0.", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nfor (let i = 0; i < tempList.length; i++) {\n  if (tempList[i] >= 37.0) {\n    console.log(\"Be careful!\");\n  }\n}", 1],
+      ["اطبع \"Avoid going outside!\" إذا وُجدت حرارة ≥ 37.5.", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nfor (let i = 0; i < tempList.length; i++) {\n  if (tempList[i] >= 37.5) {\n    console.log(\"Avoid going outside!\");\n  }\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 26", q: [
+      ["اختر نتيجة إخراج: let scoreList = [52, 60, 79, 82, 66, 59, 88]; console.log(scoreList[2]);", "79", 0],
+      ["أخرج 59 من scoreList.", "let scoreList = [52, 60, 79, 82, 66, 59, 88];\nconsole.log(scoreList[5]);", 1],
+      ["احسب متوسط 7 درجات.", "let scoreList = [52, 60, 79, 82, 66, 59, 88];\nlet sum = 0;\nfor(let i = 0; i < 7; i++){\n  sum = sum + scoreList[i];\n}\nconsole.log(sum / 7);", 1],
+      ["اطبع طول المصفوفة.", "let scoreList = [52, 60, 79, 82, 66, 59, 88];\nconsole.log(scoreList.length);", 1],
+      ["اطبع \"80 points or higher\" للدرجات ≥ 80.", "let scoreList = [52, 60, 79, 82, 66, 59, 88];\nfor (let i = 0; i < scoreList.length; i++) {\n  if (scoreList[i] >= 80) {\n    console.log(\"80 points or higher\");\n  }\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 27 ---------- */
+  27: { t: "المستوى 27 — مراجعة 25–26", s: [
+    { t: "مراجعة الفصلين 25 و26", q: [
+      ["احسب 7×7×7×7×7×7×7.", "let num = 1;\nfor (let i = 0; i < 7; i++) {\n  num = num * 7;\n}\nconsole.log(num);", 1],
+      ["احسب 1×2×3×4×5.", "let num = 1;\nfor (let i = 1; i <= 5; i++) {\n  num = num * i;\n}\nconsole.log(num);", 1],
+      ["اضرب 1 إلى 15 على التوالي.", "let num = 1;\nfor (let i = 1; i <= 15; i++) {\n  num = num * i;\n}\nconsole.log(num);", 1],
+      ["ما ناتج: let tempList = [36.2, 36.5, 36.3, 36.8, 36.4]; console.log(tempList[3]);", "36.8", 0],
+      ["أخرج 36.4 من tempList.", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4];\nconsole.log(tempList[4]);", 1],
+      ["الناقص: tempList.length (مرتين).", "let tempList = [36.0, 36.5, 36.3, 36.8, 36.4, 36.9, 36.6, 37.0, 37.1, 36.9, 36.4, 36.6, 36.7, 36.5];\nlet sum = 0;\nfor(let i = 0; i < tempList.length; i++){\n  sum = sum + tempList[i];\n}\nconsole.log(sum / tempList.length);", 1],
+      ["اطبع \"Be careful!\" إذا حرارة ≥ 37.0.", "for (let i = 0; i < tempList.length; i++) {\n  if (tempList[i] >= 37.0) {\n    console.log(\"Be careful!\");\n  }\n}", 1],
+    ]},
+    { t: "مراجعة الفهم — 27", q: [
+      ["احسب 9×9×9.", "let num = 1;\nfor (let i = 0; i < 3; i++) {\n  num = num * 9;\n}\nconsole.log(num);", 1],
+      ["كيف تتغير i في for (i=1; i<=4; i++)؟", "1→2→3→4", 0],
+      ["احسب 5040÷1÷2÷3÷4÷5.", "let num = 5040;\nfor (let i = 1; i <= 5; i++) {\n  num = num / i;\n}\nconsole.log(num);", 1],
+      ["أخرج 63 من scoreList.", "let scoreList = [52, 90, 70, 83, 63, 72, 89];\nconsole.log(scoreList[4]);", 1],
+      ["اطبع طول scoreList.", "let scoreList = [52, 90, 70, 83, 63, 72, 89];\nconsole.log(scoreList.length);", 1],
+      ["اطبع \"Pass\" للدرجات ≥ 80.", "let scoreList = [52, 90, 70, 83, 63, 72, 89];\nfor (let i = 0; i < scoreList.length; i++) {\n  if (scoreList[i] >= 80) {\n    console.log(\"Pass\");\n  }\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 28 ---------- */
+  28: { t: "المستوى 28 — for...of", s: [
+    { t: "الدرس الأول — المصفوفات و for", q: [
+      ["أسند درجات الأسبوع: 2, 1, 2, 1, 0, 1, 1 إلى degreeList وأخرج القيمة الرابعة.", "let degreeList = [2, 1, 2, 1, 0, 1, 1];\nconsole.log(degreeList[4]);", 1],
+      ["فيما تُستخدم حلقات for؟", "تكرار الأشياء", 0],
+      ["اطبع كل قيم degreeList باستخدام for.", "let degreeList = [2, 1, 2, 1, 0, 1, 1];\nfor (let i = 0; i < 7; i++) {\n  console.log(degreeList[i]);\n}", 1],
+      ["الناقص: degreeList.length", "let degreeList = [2, 1, 2, 1, 0, 1, 1];\nfor (let i = 0; i < degreeList.length; i++) {\n  console.log(degreeList[i]);\n}", 1],
+    ]},
+    { t: "الدرس الثاني — مقدمة for...of", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["اطبع كل قيم degreeList باستخدام for...of.", "let degreeList = [8, 6, 11, 10, 9, 7, 12];\nfor (let degree of degreeList) {\n  console.log(degree);\n}", 1],
+    ]},
+    { t: "الدرس الثالث — for...of تطبيقي", q: [
+      ["اطبع كل قيم numList باستخدام num في for...of.", "let numList = [5, 10, 15, 20];\nfor (let num of numList) {\n  console.log(num);\n}", 1],
+      ["اطبع كل قيم wordList باستخدام word.", "let wordList = [\"apple\", \"banana\", \"orange\"];\nfor (let word of wordList) {\n  console.log(word);\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 28", q: [
+      ["اختر نتيجة إخراج: let numList = [8, 6, 11, 10, 9, 7, 12]; console.log(numList[2]);", "11", 0],
+      ["اختر نتيجة إخراج: let numList = [10, 11, 12]; for (let i = 0; i < 3; i++) { console.log(numList[i]); }", "10\n11\n12", 0],
+      ["اختر نتيجة إخراج: let numList = [5, 6, 7]; for (let i = 0; i < numList.length; i++) { console.log(numList[i]); }", "5\n6\n7", 0],
+      ["اطبع كل قيم numList باستخدام for...of.", "let numList = [2, 4, 6, 8];\nfor (let num of numList) {\n  console.log(num);\n}", 1],
+      ["اطبع كل قيم wordList باستخدام for...of.", "let wordList = [\"Good morning\", \"Good night\", \"Hello\"];\nfor (let word of wordList) {\n  console.log(word);\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 29 ---------- */
+  29: { t: "المستوى 29 — شروط متداخلة", s: [
+    { t: "الدرس الأول — if / else if / else", q: [
+      ["أعلن score = 100، إذا كانت 100 اطبع \"Reward is steak\".", "let score = 100;\nif (score == 100) {\n  console.log(\"Reward is steak\");\n}", 1],
+      ["أضف else if (score >= 80) لطباعة \"Reward is cake\".", "let score = 85;\nif (score == 100) {\n  console.log(\"Reward is steak\");\n} else if (score >= 80) {\n  console.log(\"Reward is cake\");\n}", 1],
+      ["أضف else لطباعة \"No games for a week\".", "let score = 62;\nif (score == 100) {\n  console.log(\"Reward is steak\");\n} else if (score >= 80) {\n  console.log(\"Reward is cake\");\n} else {\n  console.log(\"No games for a week\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — عدّاد داخل if", q: [
+      ["أعلن fish = 50، إذا ≥ 50 اطبع \"Big catch!\".", "let fish = 50;\nif (fish >= 50) {\n  console.log(\"Big catch!\");\n}", 1],
+      ["أضف count = 0 ثم عدّاد داخل if.", "let fish = 50;\nlet count = 0;\nif (fish >= 50) {\n  console.log(\"Big catch!\");\n  count = count + 1;\n  console.log(\"Big fish counter:\" + count);\n}", 1],
+      ["أعلن fish = 120 و count = 0، اطبع \"Super big catch!\" وعدّاد.", "let fish = 120;\nlet count = 0;\nif (fish >= 100) {\n  console.log(\"Super big catch!\");\n  count = count + 1;\n  console.log(\"Super big fish counter:\" + count);\n}", 1],
+    ]},
+    { t: "الدرس الثالث — شروط نصية", q: [
+      ["أعلن weather = \"sunny\"، اطبع Picnic in the park أو Lunch at home.", "let weather = \"sunny\";\nif (weather == \"sunny\") {\n  console.log(\"Picnic in the park\");\n} else {\n  console.log(\"Lunch at home\");\n}", 1],
+      ["أضف shop = \"OPEN\" و if متداخل.", "let weather = \"sunny\";\nlet shop = \"OPEN\";\n\nif (weather == \"sunny\") {\n  if (shop == \"OPEN\") {\n    console.log(\"Let's buy bread and go for a picnic\");\n  }\n} else {\n  console.log(\"Lunch at home\");\n}", 1],
+      ["أضف else داخلي لطباعة apple picnic.", "let weather = \"sunny\";\nlet shop = \"CLOSED\";\n\nif (weather == \"sunny\") {\n  if (shop == \"OPEN\") {\n    console.log(\"Let's buy bread and go for a picnic\");\n  } else {\n    console.log(\"Let's buy apple and go for a picnic\");\n  }\n} else {\n  console.log(\"Lunch at home\");\n}", 1],
+    ]},
+    { t: "الدرس الرابع — if متداخل عميق", q: [
+      ["أعلن weather = \"sunny\"، اطبع Let's go on the field trip أو Field trip canceled.", "let weather = \"sunny\";\nif (weather == \"sunny\") {\n  console.log(\"Let's go on the field trip\");\n} else {\n  console.log(\"Field trip canceled\");\n}", 1],
+      ["if متداخل (Group A / museum).", "let weather = \"sunny\";\nlet group = \"Group A\";\n\nif (weather == \"sunny\") {\n  if (group == \"Group A\") {\n    console.log(\"Destination is the zoo\");\n  } else {\n    console.log(\"Destination is the museum\");\n  }\n} else {\n  console.log(\"Field trip canceled\");\n}", 1],
+      ["if متداخل بثلاث مجموعات.", "let weather = \"sunny\";\nlet group = \"Group C\";\n\nif (weather == \"sunny\") {\n  if (group == \"Group A\") {\n    console.log(\"Destination is the zoo\");\n  } else if (group == \"Group B\") {\n    console.log(\"Destination is the museum\");\n  } else {\n    console.log(\"Destination is the art museum\");\n  }\n} else {\n  console.log(\"Field trip canceled\");\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 29", q: [
+      ["أضف else if (A < B).", "let A = 5;\nlet B = 10;\nif (A > B) {\n  console.log(\"A is bigger\");\n} else if (A < B) {\n  console.log(\"B is bigger\");\n}", 1],
+      ["اختر نتيجة إخراج: A=500, B=0, if (A >= 1) { B = B + 100; console.log(B); }", "100", 0],
+      ["اختر نتيجة إخراج: weather=sunny, group=B group.", "Destination is the amusement park", 0],
+      ["if متداخل (shop OPEN).", "let weather = \"sunny\";\nlet shop = \"OPEN\";\n\nif (weather == \"sunny\") {\n  if (shop == \"OPEN\") {\n    console.log(\"Go to the shop\");\n  }\n} else {\n  console.log(\"Staying at home\");\n}", 1],
+      ["if متداخل (rain + time).", "let weather = \"rain\";\nlet time = \"morning\";\n\nif (weather == \"rain\") {\n  if (time == \"morning\") {\n    console.log(\"Let's go to the movie theater\");\n  } else if (time == \"noon\") {\n    console.log(\"Let's go to the library\");\n  } else {\n    console.log(\"Let's stay at home\");\n  }\n} else {\n  console.log(\"Let's go for a walk\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 30 ---------- */
+  30: { t: "المستوى 30 — مراجعة 28–29", s: [
+    { t: "مراجعة 28–29", q: [
+      ["for...of على degreeList.", "let degreeList = [8, 6, 11, 10, 9, 7, 12];\nfor (let degree of degreeList) {\n  console.log(degree);\n}", 1],
+      ["for...of على wordList = [tomato, carrot, onion].", "let wordList = [\"tomato\", \"carrot\", \"onion\"];\nfor (let word of wordList) {\n  console.log(word);\n}", 1],
+      ["عدّاد الأسماك الكبيرة (big).", "let fish = 50;\nlet big = 0;\nif (fish >= 50) {\n  console.log(\"Big catch!\");\n  big = big + 1;\n  console.log(\"Big fish counter:\" + big);\n}", 1],
+      ["if متداخل (shop OPEN).", "let weather = \"sunny\";\nlet shop = \"OPEN\";\n\nif (weather == \"sunny\") {\n  if (shop == \"OPEN\") {\n    console.log(\"Buy bread and have a picnic\");\n  }\n} else {\n  console.log(\"Lunch at home\");\n}", 1],
+      ["if متداخل بثلاث مجموعات.", "let weather = \"sunny\";\nlet group = \"Group B\";\n\nif (weather == \"sunny\") {\n  if (group == \"Group A\") {\n    console.log(\"Destination is the zoo\");\n  } else if (group == \"Group B\") {\n    console.log(\"Destination is the museum\");\n  } else {\n    console.log(\"Destination is the art museum\");\n  }\n} else {\n  console.log(\"Field trip canceled\");\n}", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 30", q: [
+      ["اختر نتيجة إخراج: let numList = [5, 6, 7]; for (let i = 0; i < numList.length; i++) { console.log(numList[i]); }", "5\n6\n7", 0],
+      ["for...of على numList.", "let numList = [2, 4, 6, 8];\nfor (let num of numList) {\n  console.log(num);\n}", 1],
+      ["for...of على wordList.", "let wordList = [\"Good morning\", \"Good night\", \"Hello\"];\nfor (let word of wordList) {\n  console.log(word);\n}", 1],
+      ["اختر نتيجة إخراج: A=500, B=0.", "100", 0],
+      ["اختر نتيجة إخراج: weather=sunny, group=B group.", "Destination is the amusement park", 0],
+      ["if متداخل (rain + time).", "let weather = \"rain\";\nlet time = \"morning\";\n\nif (weather == \"rain\") {\n  if (time == \"morning\") {\n    console.log(\"Let's go to the movie theater\");\n  } else if (time == \"noon\") {\n    console.log(\"Let's go to the library\");\n  } else {\n    console.log(\"Let's stay at home\");\n  }\n} else {\n  console.log(\"Let's go for a walk\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 31 ---------- */
+  31: { t: "المستوى 31 — دوال بمعاملات متعددة", s: [
+    { t: "الدرس الأول — دالة بمعاملين", q: [
+      ["دالة sum تجمع freestyle و breaststroke.", "function sum(freestyle, breaststroke) {\n  let result = freestyle + breaststroke;\n  return result;\n}", 1],
+      ["أضف: console.log(sum(39.5, 60.5));", "function sum(freestyle, breaststroke) {\n  let result = freestyle + breaststroke;\n  return result;\n}\nconsole.log(sum(39.5, 60.5));", 1],
+      ["أضف teamRed = sum(39.5, 60.5) واطبعها.", "function sum(freestyle, breaststroke) {\n  let time = freestyle + breaststroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5);\nconsole.log(teamRed);", 1],
+    ]},
+    { t: "الدرس الثاني — إضافة معامل ثالث", q: [
+      ["الناقص: backstroke / backstroke / 58.5", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);", 1],
+      ["أضف teamBlue = sum(40, 62, 58).", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);", 1],
+      ["أضف teamGreen = sum(41, 59.5, 60).", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);\nlet teamGreen = sum(41, 59.5, 60);\nconsole.log(teamGreen);", 1],
+    ]},
+    { t: "الدرس الثالث — Math.min للأسرع", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: Math.min(158.5, 160, 160.5)", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);\nlet teamGreen = sum(41, 59.5, 60);\nconsole.log(teamGreen);\nconsole.log(\"The fastest time is\" + Math.min(158.5, 160, 160.5));", 1],
+      ["الناقص: Math.min(teamRed, teamBlue, teamGreen)", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);\nlet teamGreen = sum(41, 59.5, 60);\nconsole.log(teamGreen);\nconsole.log(\"The fastest time is\" + Math.min(teamRed, teamBlue, teamGreen));", 1],
+    ]},
+    { t: "مراجعة المستوى 31", q: [
+      ["دالة calculation3 تضرب a×b×c.", "function calculation3(a, b, c){\n  let result = a * b * c;\n  return result;\n}\nconsole.log(calculation3(2, 3, 4));", 1],
+      ["اختر البرنامج الصحيح لتمرير 3, 5, 10 إلى calculation3.", "console.log(calculation3(3, 5, 10));", 1],
+      ["أعلن num1 = calculation3(5, 10, 15).", "function calculation3(a, b, c) {\n  let result = a * b * c;\n  return result;\n}\nlet num1 = calculation3(5, 10, 15);\nconsole.log(num1);", 1],
+      ["أضف num2 = calculation3(4, 4, 4).", "function calculation3(a, b, c) {\n  let result = a * b * c;\n  return result;\n}\nlet num1 = calculation3(5, 10, 15);\nconsole.log(num1);\nlet num2 = calculation3(4, 4, 4);\nconsole.log(num2);", 1],
+      ["اختر البرنامج الذي يعرض أصغر قيمة من num1, num2, num3.", "console.log(Math.min(num1, num2, num3));", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 32 ---------- */
+  32: { t: "المستوى 32 — المخطط الانسيابي", s: [
+    { t: "الدرس الأول — for...of مع عدّاد", q: [
+      ["الناقص: let day of volunteerList", "let volunteerList = [\"Yes\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"Yes\", \"No\"];\nfor (let day of volunteerList) {\n  console.log(day);\n}", 1],
+      ["عدّاد \"Yes\" في المصفوفة.", "let volunteerList = [\"Yes\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"Yes\", \"No\"];\nlet count = 0;\nfor (let day of volunteerList) {\n  if (day == \"Yes\") {\n    count++;\n  }\n}\nconsole.log(count);", 1],
+      ["عدّاد \"No\" في المصفوفة.", "let volunteerList = [\"Yes\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"Yes\", \"No\"];\nlet count = 0;\nfor (let day of volunteerList) {\n  if (day == \"No\") {\n    count++;\n  }\n}\nconsole.log(count);", 1],
+    ]},
+    { t: "الدرس الثالث — if / else / nested", q: [
+      ["if/else للشطيرة.", "let sandwichType = \"strawberry jam\";\nif (sandwichType == \"savory\") {\n  console.log(\"Check what's inside the sandwich\");\n} else {\n  console.log(\"Eat strawberry jam sandwich\");\n}", 1],
+      ["if متداخل للشطيرة.", "let sandwichType = \"savory\";\nlet savory = \"tuna\";\nif (sandwichType == \"savory\") {\n  if (savory == \"tuna\") {\n    console.log(\"Exchange with Cody\");\n  } else {\n    console.log(\"Eat ham sandwich\");\n  }\n} else {\n  console.log(\"Eat strawberry jam sandwich\");\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 32", q: [
+      ["الناقص: let score of scoreList", "let scoreList = [70, 80, 66, 88, 92];\nfor (let score of scoreList) {\n  console.log(score);\n}", 1],
+      ["اختر نتيجة إخراج: for...of مع if (score >= 80).", "80\n88\n92", 0],
+      ["اطبع القيم ≥ 150 من heightList.", "let heightList = [154, 138, 140, 180, 170];\n\nfor (let height of heightList) {\n  if (height >= 150) {\n    console.log(height);\n  }\n}", 1],
+      ["العبارة الخاطئة عن المخطط الانسيابي.", "إذا كان طولك 140 سم أو أكثر، يمكنك الركوب بمفردك.", 0],
+      ["if متداخل (height + age).", "let height = 148;\nlet age = 14;\n\nif (height >= 140) {\n  if (age >= 12) {\n    console.log(\"You can ride alone\");\n  } else {\n    console.log(\"Please ride with someone who is 18 years or older\");\n  }\n} else {\n  console.log(\"You cannot ride\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 33 ---------- */
+  33: { t: "المستوى 33 — مراجعة 31–32", s: [
+    { t: "مراجعة الفصلين 31 و32", q: [
+      ["دالة sum بثلاث وسائط.", "function sum(freestyle, breaststroke, backstroke) {\n  let result = freestyle + breaststroke + backstroke;\n  return result;\n}", 1],
+      ["أضف teamRed = sum(39.5, 60.5, 58.5).", "function sum(freestyle, breaststroke,backstroke) {\n  let result = freestyle + breaststroke +backstroke;\n  return result;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);", 1],
+      ["أضف teamBlue و teamGreen.", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);\nlet teamGreen = sum(41, 59.5, 60);\nconsole.log(teamGreen);", 1],
+      ["الناقص: Math.min(teamRed, teamBlue, teamGreen)", "function sum(freestyle, breaststroke, backstroke) {\n  let time = freestyle + breaststroke + backstroke;\n  return time;\n}\nlet teamRed = sum(39.5, 60.5, 58.5);\nconsole.log(teamRed);\nlet teamBlue = sum(40, 62, 58);\nconsole.log(teamBlue);\nlet teamGreen = sum(41, 59.5, 60);\nconsole.log(teamGreen);\nconsole.log(\"The fastest time is\" + Math.min(teamRed, teamBlue, teamGreen));", 1],
+      ["الناقص: let day of volunteerList", "let volunteerList = [\"Yes\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"Yes\", \"No\"];\nfor (let day of volunteerList) {\n  console.log(day);\n}", 1],
+      ["عدّاد Yes في volunteerList.", "let volunteerList = [\"Yes\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"No\", \"Yes\", \"Yes\", \"Yes\", \"No\", \"Yes\", \"No\"];\nlet count = 0;\nfor (let day of volunteerList) {\n  if (day == \"Yes\") {\n    count++;\n  }\n}\nconsole.log(count);", 1],
+      ["if/else للطقس.", "let weather = \"sunny\";\nif (weather == \"sunny\") {\n  console.log(\"exercise\");\n} else {\n  console.log(\"read a book\");\n}", 1],
+      ["if متداخل للشطيرة.", "let sandwichType = \"savory\";\nlet savory = \"tuna\";\nif (sandwichType == \"savory\") {\n  if (savory == \"tuna\") {\n    console.log(\"Exchange with Cody\");\n  } else {\n    console.log(\"Eat ham sandwich\");\n  }\n} else {\n  console.log(\"Eat strawberry jam sandwich\");\n}", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 33", q: [
+      ["اختر البرنامج الصحيح لتمرير 3, 5, 10 إلى calc3.", "console.log(calc3(3, 5, 10));", 1],
+      ["أعلن num1 = calc3(5, 10, 15).", "function calc3(a, b, c) {\n  let result = a * b * c;\n  return result;\n}\nlet num1 = calc3(5, 10, 15);\nconsole.log(num1);", 1],
+      ["أضف num2 = calc3(4, 4, 4).", "function calc3(a, b, c) {\n  let result = a * b * c;\n  return result;\n}\nlet num1 = calc3(5, 10, 15);\nconsole.log(num1);\nlet num2 = calc3(4, 4, 4);\nconsole.log(num2);", 1],
+      ["اختر البرنامج الذي يعرض أصغر قيمة من num1, num2, num3.", "console.log(Math.min(num1, num2, num3));", 1],
+      ["اختر نتيجة إخراج: for...of مع if (score >= 80).", "80\n88\n92", 0],
+      ["اطبع القيم ≥ 150 من heightList.", "let heightList = [154, 138, 140, 180, 170];\n\nfor (let height of heightList) {\n  if (height >= 150) {\n    console.log(height);\n  }\n}", 1],
+      ["العبارة الخاطئة عن المخطط الانسيابي.", "إذا كان عمرك 12 سنة أو أكثر وكان طولك 140 سم أو أكثر، يمكنك الركوب بمفردك.", 0],
+    ]},
+  ]},
+
+  /* ---------- المستوى 34 ---------- */
+  34: { t: "المستوى 34 — HTML (جداول وقوائم وأزرار)", s: [
+    { t: "الدرس الأول — h1 / p / ul / img", q: [
+      ["أدخل: <h1>Sports Tournament Program</h1>", "<h1>Sports Tournament Program</h1>", 1],
+      ["أضف السطر الثاني: <p>Events</p>", "<h1>Sports Tournament Program</h1>\n<p>Events</p>", 1],
+      ["أضف ul/li من السطر الثالث.", "<h1>Sports Tournament Program</h1>\n<p>Events</p>\n<ul>\n<li>Frisbee</li>\n<li>Softball</li>\n<li>Bread-eating race</li>\n</ul>", 1],
+      ["أضف img في السطر الثامن.", "<h1>Sports Tournament Program</h1>\n<p>Events</p>\n<ul>\n<li>Frisbee</li>\n<li>Softball</li>\n<li>Bread-eating race</li>\n</ul>\n<img src=\"sports.png\">", 1],
+    ]},
+    { t: "الدرس الثاني — span و class", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثالث).", "تشغيل الكود", 0],
+      ["الناقص: <span> و </span> حول sea.", "<p>Let's go to the <span>sea</span></p>\n<p class=\"mountain\">Let's go to the mountains</p>", 1],
+      ["الناقص: class=\"sea\" و class=\"mountain\"", "<p>Let's go to the <span class=\"sea\">sea</span></p>\n<p>Let's go to the <span class=\"mountain\">mountain</span></p>", 1],
+      ["أضف span + class لـ Apple, Giraffe, Light blue sneakers.", "<p>My favorite fruit is <span class=\"apple\">Apple</span></p>\n<p>My favorite animal is <span class=\"giraffe\">Giraffe</span></p>\n<p>Today's shoes are <span class=\"sneaker\">Light blue sneakers</span></p>", 1],
+    ]},
+    { t: "الدرس الثالث — input (text و button)", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["أضف في السطر الثالث: <input type=\"text\">", "<h1>Event Content Survey</h1>\n<p>Opinion</p>\n<input type=\"text\">", 1],
+      ["أضف في السطر الرابع: <input type=\"button\">", "<h1>Event Content Survey</h1>\n<p>Opinion</p>\n<input type=\"text\">\n<input type=\"button\">", 1],
+      ["عدّل السطر الرابع ليصبح: <input type=\"button\" value=\"Submit\">", "<h1>Event Content Survey</h1>\n<p>Opinion</p>\n<input type=\"text\">\n<input type=\"button\" value=\"Submit\">", 1],
+      ["أضف السطرين الثالث والرابع (text + button).", "<h1>Event Content Survey</h1>\n<p>Opinion</p>\n<input type=\"text\">\n<input type=\"button\" value=\"Submit\">", 1],
+    ]},
+    { t: "مراجعة المستوى 34", q: [
+      ["قائمة نقطية تحت Menu (Hamburger, Pizza, Sandwich).", "<p>Menu</p>\n<ul>\n<li>Hamburger</li>\n<li>Pizza</li>\n<li>Sandwich</li>\n</ul>", 1],
+      ["اختر كود الصورة cody.png.", "<img src=\"cody.png\">", 1],
+      ["اختر نتيجة إخراج: <p><span class=\"tomato\">Tomato</span>Hamburger</p> + .tomato { color: red; }", "يتم عرض النص \"Tomato\" باللون الاحمر", 0],
+      ["اختر كود HTML المناسب للصورة.", "<p>Phone Number</p>\n<input type=\"text\">\n<input type=\"button\" value=\"Enter\">", 1],
+      ["أضف value=\"Submit\" إلى زر.", "<input type=\"button\" value=\"Submit\">", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 35 ---------- */
+  35: { t: "المستوى 35 — CSS (متقدم)", s: [
+    { t: "الدرس الأول — CSS أساسي و class", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["اجعل h1 أحمر.", "h1 {\n  color: red;\n}", 1],
+      ["أضف background-color: pink.", "h1 {\n  color: red;\n  background-color: pink;\n}", 1],
+      ["أضف قواعد li.", "h1 {\n  color: red;\n  background-color: pink;\n}\nli {\n  font-size: 24px;\n  font-weight: 900;\n}", 1],
+      ["عدّل السطر الرابع لإضافة class=\"blue\" لـ Math Practice.", "<h1>Homework List</h1>\n<ul>\n<li>History Study</li>\n<li class=\"blue\">Math Practice</li>\n<li>Essay</li>\n</ul>", 1],
+      ["أضف قاعدة .blue بلون أزرق.", "h1 {\n  color: red;\n  background-color: pink;\n}\nli {\n  font-size: 24px;\n  font-weight: 900;\n}\n.blue {\n  color: blue;\n}", 1],
+    ]},
+    { t: "الدرس الثاني — :hover", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["الناقص: background-color: aqua;", ".btn1 {\n  background-color: aqua;\n}", 1],
+      ["أضف .btn2:hover باللون الأصفر.", ".btn1 {\n  background-color: aqua;\n}\n.btn2:hover {\n  background-color: yellow;\n}", 1],
+      ["عدّل .btn1:hover ليصبح lime.", ".btn1:hover {\n  background-color: lime;\n}\n.btn2:hover {\n  background-color: yellow;\n}", 1],
+    ]},
+    { t: "الدرس الثالث — transition", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["أضف transition: 2s إلى .btn1:hover.", ".btn1:hover {\n  background-color: lime;\n  transition: 2s;\n}\n.btn2:hover {\n  background-color: yellow;\n}", 1],
+      ["أضف transition: 5s إلى .btn2:hover.", ".btn1:hover {\n  background-color: lime;\n  transition: 2s;\n}\n.btn2:hover {\n  background-color: yellow;\n  transition: 5s;\n}", 1],
+    ]},
+    { t: "الدرس الرابع — border", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["أضف border: solid;", "h1 {\n  border: solid;\n}", 1],
+      ["غيّر إلى border: double;", "h1 {\n  border: double;\n}", 1],
+      ["الناقص: 10px", "h1 {\n  border: 10px double;\n}", 1],
+      ["الناقص: blue", "h1 {\n  border: 10px double blue;\n}", 1],
+      ["اجعل الإطار 5px solid red.", "h1 {\n  border: 5px solid red;\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 35", q: [
+      ["اختر الطريقة الصحيحة لإضافة class إلى <p>CAT</p>.", "<p class=\"cat\">CAT</p>", 1],
+      ["اختر CSS لجعل الزر أحمر عند hover.", ".btn:hover {\n  background-color: red;\n}", 1],
+      ["اختر CSS لجعل الزر يتحول للأحمر خلال 5 ثواني.", ".btn:hover {\n  background-color: red;\n  transition: 5s;\n}", 1],
+      ["اختر قيمة الإطار المزدوج.", "double", 0],
+      ["اختر CSS لـ h1 بإطار 10px solid blue.", "h1 {\n  border: 10px solid blue;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 36 ---------- */
+  36: { t: "المستوى 36 — مراجعة 34–35", s: [
+    { t: "مراجعة الفصلين 34 و35", q: [
+      ["h1 لعرض Sports Festival Program + img sports.png.", "<h1>Sports Festival Program</h1>\n<img src=\"sports.png\">", 1],
+      ["أضف span + class إلى Apple و Giraffe.", "<p>My favorite fruit is <span class=\"apple\">Apple</span></p>\n<p>My favorite animal is <span class=\"giraffe\">Giraffe</span></p>", 1],
+      ["أضف input text + input button Submit.", "<h1>Event Content Survey</h1>\n<p>Opinion</p>\n<input type=\"text\">\n<input type=\"button\" value=\"Submit\">", 1],
+      ["CSS: h1 خلفية pink, li bold, .red أحمر.", "h1 {\n  background-color: pink;\n}\nli {\n  font-weight: bold;\n}\n.red {\n  color: red;\n}", 1],
+      ["CSS: .btn1 lime hover، .btn2 yellow مع 2s transition.", ".btn1:hover {\n  background-color: lime;\n}\n.btn2:hover {\n  background-color: yellow;\n  transition: 2s;\n}", 1],
+      ["CSS: h1 بإطار 10px double red.", "h1 {\n  border: 10px double red;\n}", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 36", q: [
+      ["قائمة نقطية تحت Menu (Hamburger, Pizza, Sandwich).", "<p>Menu</p>\n<ul>\n<li>Hamburger</li>\n<li>Pizza</li>\n<li>Sandwich</li>\n</ul>", 1],
+      ["اختر نتيجة إخراج: <p><span class=\"tomato\">Tomato</span>Hamburger</p> + .tomato { color: red; }", "يتم عرض النص \"Tomato\" باللون الاحمر", 0],
+      ["اختر كود HTML المناسب للصورة.", "<p>Phone Number</p>\n<input type=\"text\">\n<input type=\"button\" value=\"Enter\">", 1],
+      ["أضف value=\"Submit\" إلى الزر.", "<input type=\"button\" value=\"Submit\">", 1],
+      ["اختر CSS لجعل الزر أحمر عند hover.", ".btn:hover {\n  background-color: red;\n}", 1],
+      ["اختر CSS لجعل الزر يتحول للأحمر خلال 5 ثواني.", ".btn:hover {\n  background-color: red;\n  transition: 5s;\n}", 1],
+      ["اختر قيمة الإطار المزدوج.", "double", 0],
+      ["اختر CSS لـ h1 بإطار 10px solid blue.", "h1 {\n  border: 10px solid blue;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 37 ---------- */
+  37: { t: "المستوى 37 — switch", s: [
+    { t: "الدرس الأول — if / else if (تمهيد)", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["أضف if (bloodType == \"A\").", "let bloodType = \"A\";\n\nif (bloodType == \"A\") {\n  console.log(\"Today's fortune is decent\");\n}", 1],
+      ["أضف else if لـ B و O و AB.", "let bloodType = \"B\";\n\nif (bloodType == \"A\") {\n  console.log(\"Today's fortune is decent\");\n} else if (bloodType == \"B\") {\n  console.log(\"Today's fortune is excellent!\");\n} else if (bloodType == \"O\") {\n  console.log(\"Today's fortune looks good!\");\n} else if (bloodType == \"AB\") {\n  console.log(\"Today's fortune might not be so good...\");\n}", 1],
+      ["أضف else نهائي.", "let bloodType = \"Unknown\";\n\nif (bloodType == \"A\") {\n  console.log(\"Today's fortune is decent\");\n} else if (bloodType == \"B\") {\n  console.log(\"Today's fortune is excellent!\");\n} else if (bloodType == \"O\") {\n  console.log(\"Today's fortune looks good!\");\n} else if (bloodType == \"AB\") {\n  console.log(\"Today's fortune might not be so good...\");\n} else {\n  console.log(\"Let's find out your blood type!\");\n}", 1],
+    ]},
+    { t: "الدرس الثاني — مقدمة switch", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل (سؤال ثانٍ).", "تشغيل الكود", 0],
+      ["الناقص: switch / case / break", "let bloodType = \"B\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\ncase \"O\":\n  console.log(\"Today's fortune looks good!\");\n  break;\ncase \"AB\":\n  console.log(\"Today's fortune might not be so good...\");\n  break;\ndefault:\n  console.log(\"Let's find out your blood type!\");\n  break;\n}", 1],
+      ["الناقص: default و break.", "let bloodType = \"C\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\ncase \"O\":\n  console.log(\"Today's fortune looks good!\");\n  break;\ncase \"AB\":\n  console.log(\"Today's fortune might not be so good...\");\n  break;\ndefault:\n  console.log(\"Let's find out your blood type!\");\n  break;\n}", 1],
+    ]},
+    { t: "الدرس الثالث — switch عملي", q: [
+      ["switch على حالة A فقط.", "let bloodType = \"A\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\n}", 1],
+      ["أضف case B.", "let bloodType = \"B\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\n}", 1],
+      ["أضف case O و case AB.", "let bloodType = \"AB\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\ncase \"O\":\n  console.log(\"Today's fortune looks good!\");\n  break;\ncase \"AB\":\n  console.log(\"Today's fortune might not be so good...\");\n  break;\n}", 1],
+      ["أضف default.", "let bloodType = \"Unknown\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\ncase \"O\":\n  console.log(\"Today's fortune looks good!\");\n  break;\ncase \"AB\":\n  console.log(\"Today's fortune might not be so good...\");\n  break;\ndefault:\n  console.log(\"Let's find out your blood type!\");\n  break;\n}", 1],
+      ["الناقص: switch / day / case / break / case / break / default / break", "let day = \"Sunday\";\n\nswitch (day) {\ncase \"Saturday\":\n  console.log(\"Go to lessons\");\n  break;\ncase \"Sunday\":\n  console.log(\"Go shopping\");\n  break;\ndefault:\n  console.log(\"Go to school\");\n  break;\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 37", q: [
+      ["أضف else if (color == \"blue\") و else if (color == \"green\").", "let color = \"green\";\n\nif (color == \"red\") {\n  console.log(\"Red\");\n} else if (color == \"blue\") {\n  console.log(\"Blue\");\n} else if (color == \"green\") {\n  console.log(\"Green\");\n}", 1],
+      ["متى يعمل قسم default في switch؟", "عندما لا تتطابق القيمة مع أيٍّ من الحالات (cases)", 0],
+      ["اختر نتيجة إخراج: switch على era = Medieval.", "500~1500", 0],
+      ["switch على letter لـ A و B و C.", "let letter = \"B\";\n\nswitch (letter) {\ncase \"A\":\n  console.log(\"Well done!\");\n  break;\ncase \"B\":\n  console.log(\"Keep up the good work\");\n  break;\ncase \"C\":\n  console.log(\"Let's try a little harder\");\n  break;\n}", 1],
+      ["أضف default للرسالة \"The notation is incorrect\".", "let letter = \"D\";\n\nswitch (letter) {\ncase \"A\":\n  console.log(\"Well done!\");\n  break;\ncase \"B\":\n  console.log(\"Keep up the good work\");\n  break;\ncase \"C\":\n  console.log(\"Let's try a little harder\");\n  break;\ndefault:\n  console.log(\"The notation is incorrect\");\n  break;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 38 ---------- */
+  38: { t: "المستوى 38 — Modulo (باقي القسمة)", s: [
+    { t: "الدرس الأول — القسمة العادية vs الباقي", q: [
+      ["الناقص: cookies / 3", "let cookies = 20;\nconsole.log(cookies / 3);", 1],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: snacks % 6", "let snacks = 35;\nconsole.log(snacks % 6);", 1],
+    ]},
+    { t: "الدرس الثاني — modulo في if", q: [
+      ["أخرج باقي members / 6.", "let members = 40;\nconsole.log(members % 6);", 1],
+      ["أضف if (snacks % 3 > 0) لطباعة \"Rick gets it\".", "let snacks = 13;\nif (snacks % 3 > 0) {\n  console.log(\"Rick gets it\");\n}", 1],
+    ]},
+    { t: "الدرس الثالث — modulo في switch", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["أضف switch (donuts % 3) مع case 0.", "let donuts = 20;\n\nswitch (donuts % 3) {\ncase 0:\n  console.log(\"Let's clean up the trash neatly\");\n  break;\n}", 1],
+      ["أضف case 1 و case 2.", "let donuts = 20;\n\nswitch (donuts % 3) {\ncase 0:\n  console.log(\"Let's clean up the trash neatly\");\n  break;\ncase 1:\n  console.log(\"Give it to Mom\");\n  break;\ncase 2:\n  console.log(\"Give it to Mom and Dad\");\n  break;\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 38", q: [
+      ["اختر نتيجة إخراج: console.log(5 % 4);", "1", 0],
+      ["اختر التعبير الشرطي: year يقبل القسمة على 12.", "year % 12 == 0", 1],
+      ["if لطباعة \"Let's eat a hamburger!\" إذا dayCount%7==0.", "let dayCount = 14;\n\nif (dayCount % 7 == 0) {\n  console.log(\"Let's eat a hamburger!\");\n}", 1],
+      ["switch على dayCount%7 (0→burger، 4→steak).", "let dayCount = 11;\n\nswitch (dayCount % 7) {\ncase 0:\n  console.log(\"Let's eat a hamburger!\");\n  break;\ncase 4:\n  console.log(\"Let's eat steak!\");\n  break;\n}", 1],
+      ["switch على number%3 (Group A/B/C).", "let number = 20;\n\nswitch (number % 3) {\ncase 0:\n  console.log(\"Group A\");\n  break;\ncase 1:\n  console.log(\"Group B\");\n  break;\ncase 2:\n  console.log(\"Group C\");\n  break;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 39 ---------- */
+  39: { t: "المستوى 39 — مراجعة 37–38", s: [
+    { t: "مراجعة الدرسين 37 و38", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["switch على bloodType = Unknown.", "let bloodType = \"Unknown\";\n\nswitch (bloodType) {\ncase \"A\":\n  console.log(\"Today's fortune is decent\");\n  break;\ncase \"B\":\n  console.log(\"Today's fortune is excellent!\");\n  break;\ndefault:\n  console.log(\"Let's find out your blood type!\");\n  break;\n}", 1],
+      ["أخرج باقي 20/3 من cookies.", "let cookies = 20;\nconsole.log(cookies % 3);", 1],
+      ["if (cookies % 3 > 0) لطباعة \"Cody gets it\".", "let cookies = 20;\nif (cookies % 3 > 0) {\n  console.log(\"Cody gets it\");\n}", 1],
+      ["switch على orange%3 (0/1/2).", "let orange = 85;\n\nswitch (orange % 3) {\ncase 0:\n  console.log(\"They were divided equally\");\n  break;\ncase 1:\n  console.log(\"Give it to Grandma\");\n  break;\ncase 2:\n  console.log(\"Give it to the neighbors\");\n  break;\n}", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 39", q: [
+      ["متى يعمل default؟", "عندما لا تتطابق القيمة مع أي من الحالات", 0],
+      ["اختر نتيجة إخراج switch على era = Medieval.", "500~1500", 0],
+      ["switch على letter لـ A و B و C.", "let letter = \"B\";\n\nswitch (letter) {\ncase \"A\":\n  console.log(\"Well done!\");\n  break;\ncase \"B\":\n  console.log(\"Keep up the good work\");\n  break;\ncase \"C\":\n  console.log(\"Let's try a little harder\");\n  break;\n}", 1],
+      ["اختر نتيجة إخراج: console.log(5 % 4);", "1", 0],
+      ["if لطباعة \"Let's eat a hamburger!\" إذا dayCount%7==0.", "let dayCount = 14;\n\nif (dayCount % 7 == 0) {\n  console.log(\"Let's eat a hamburger!\");\n}", 1],
+      ["switch على number%3 (Group A/B/C).", "let number = 20;\n\nswitch (number % 3) {\ncase 0:\n  console.log(\"Group A\");\n  break;\ncase 1:\n  console.log(\"Group B\");\n  break;\ncase 2:\n  console.log(\"Group C\");\n  break;\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 40 ---------- */
+  40: { t: "المستوى 40 — const / != ", s: [
+    { t: "الدرس الأول — let vs const", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: let", "let num = 3;\nnum = 5;\nconsole.log(num);", 1],
+      ["الناقص: const", "const num = 3;\nnum = 5;\nconsole.log(num);", 1],
+    ]},
+    { t: "الدرس الثاني — const في التطبيق", q: [
+      ["أي مما يلي هو تعريف ثابت؟", "const", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: const day = 7;", "const day = 7;\nconsole.log(\"One week is \" + day + \" days\");", 1],
+      ["الناقص: let day = 30;", "let day = 30;\nconsole.log(\"September has \" + day + \" days\");\nday = 31;\nconsole.log(\"October has \" + day + \" days\");", 1],
+      ["الناقص: const myBirthday = \"September 1st\";", "const myBirthday = \"September 1st\";\nconsole.log(\"My birthday is \" + myBirthday);", 1],
+    ]},
+    { t: "الدرس الثالث — != (عدم المساواة)", q: [
+      ["صحح الكود بـ != لطباعة Play soccer.", "const weather = \"Cloudy\";\n\nif (weather != \"Rainy\"){\n  console.log(\"Play soccer\");\n}", 1],
+      ["صحح بـ != لطباعة \"Aim for a perfect score!\".", "const myScore = 90;\n\nif (myScore != 100){\n  console.log(\"Aim for a perfect score!\");\n}", 1],
+    ]},
+    { t: "مراجعة المستوى 40", q: [
+      ["اكتب تعبير الشرط answer1 != answer2.", "const answer1 = 1023;\nconst answer2 = 1024;\n\nif (answer1 != answer2) {\n  console.log(\"Let's review once more!\");\n}", 1],
+      ["اختر طريقة الإعلان لإعادة الإسناد.", "let", 1],
+      ["أعد كتابة الإعلان بشكل صحيح.", "let num;\nnum = 3;\nnum = 5;\nconsole.log(num);", 1],
+      ["اختر التعبير الشرطي: a != 100.", "a != 100", 1],
+      ["اكتب التعبير الشرطي answer1 != answer2.", "const answer1 = 1023;\nconst answer2 = 1024;\n\nif (answer1 != answer2) {\n  console.log(\"Let's review once more!\");\n}", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 41 ---------- */
+  41: { t: "المستوى 41 — while loops", s: [
+    { t: "الدرس الثاني — while أساسي", q: [
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["الناقص: while و money > comics", "let money = 7500;\nconst comics = 425;\nwhile (money > comics) {\n  money = money - comics;\n  console.log(money);\n}", 1],
+    ]},
+    { t: "الدرس الثالث — while للادخار", q: [
+      ["ماذا يجب أن نأكل؟", "هامبرغر", 0],
+      ["انقر على \"تشغيل الكود\" دون تعديل.", "تشغيل الكود", 0],
+      ["عدّل الكود لاستخدام while (money < 3800).", "let money = 520;\nlet count = 0;\nwhile (money < 3800) {\n  count ++;\n  money += 450;\n}\nconsole.log(\"Save for \" + count + \" times\");", 1],
+    ]},
+    { t: "مراجعة المستوى 41", q: [
+      ["اطبع Programming 3 مرات باستخدام for.", "for (let i = 0; i < 3; i++) {\n  console.log(\"Programming\");\n}", 1],
+      ["اختر الوصف الصحيح لـ while.", "while ( condition ) {\n  process;\n}", 1],
+      ["اختر نتيجة إخراج: while (numA < numB) مع numA=0, numB=3.", "0\n1\n2", 0],
+      ["برنامج while لطرح price من money.", "let money = 1000;\nconst snacks = 230;\nwhile (money > snacks) {\n  money = money - snacks;\n  console.log(money);\n}", 1],
+      ["برنامج while للادخار حتى 4000.", "let money = 600;\nlet month = 0;\nwhile (money < 4000) {\n  month ++;\n  money += 800;\n}\nconsole.log(\"Save for \" + month + \" months\");", 1],
+    ]},
+  ]},
+
+  /* ---------- المستوى 42 ---------- */
+  42: { t: "المستوى 42 — مراجعة 40–41", s: [
+    { t: "مراجعة الفصلين 40 و41", q: [
+      ["أي مما يلي هو تعريف ثابت؟", "const", 0],
+      ["أعلن season بـ let.", "let season = \"spring\";\nconsole.log(\"The current season is \" + season);\nseason = \"summer\";\nconsole.log(\"The next season is \" + season);", 1],
+      ["أعلن day = 7 باستخدام const.", "const day = 7;\nconsole.log(\"One week is \" + day + \" days\");", 1],
+      ["صحح الكود: weather != \"Rainy\" لطباعة Play soccer.", "const weather = \"Cloudy\";\n\nif (weather != \"Rainy\"){\n  console.log(\"Play soccer\");\n}", 1],
+      ["عدّل الكود لاستخدام while (money < 3800).", "let money = 520;\nlet count = 0;\nwhile (money < 3800) {\n  count ++;\n  money += 450;\n}\nconsole.log(\"Save for \" + count + \" times\");", 1],
+    ]},
+    { t: "اختبار منتصف الطريق — 42", q: [
+      ["اختر طريقة التعريف لإعادة الإسناد.", "let", 1],
+      ["أعد كتابة الإعلان بشكل صحيح.", "let num;\nnum = 3;\nnum = 5;\nconsole.log(num);", 1],
+      ["اختر التعبير الشرطي: a != 100.", "a != 100", 1],
+      ["اختر الوصف الصحيح لـ while.", "while ( condition ) {\n  process;\n}", 1],
+      ["برنامج while لشراء الوجبات الخفيفة.", "let money = 1000;\nconst snacks = 230;\nwhile (money > snacks) {\n  money = money - snacks;\n  console.log(money);\n}", 1],
+      ["برنامج while للادخار حتى 4000.", "let money = 600;\nlet month = 0;\nwhile (money < 4000) {\n  month ++;\n  money += 800;\n}\nconsole.log(\"Save for \" + month + \" months\");", 1],
+    ]},
+  ]},
+};
+
+/* =========================================================
+   محرك العرض
+   ========================================================= */
+const TOTAL_LEVELS = 42;
+
+function pad(n){ return n < 10 ? "0" + n : String(n); }
+function tierOf(n){ return n <= 10 ? "tier-1" : n <= 20 ? "tier-2" : n <= 30 ? "tier-3" : "tier-4"; }
+function tierName(n){ return n <= 10 ? "أساسيات" : n <= 20 ? "متوسط" : n <= 30 ? "متقدم" : "احترافي"; }
+
+function buildGrid(){
+  const grid = document.getElementById("jsGrid");
+  const frag = document.createDocumentFragment();
+  for (let i = 1; i <= TOTAL_LEVELS; i++){
+    const el = document.createElement("div");
+    const hasData = !!L[i];
+    el.className = "level " + tierOf(i) + (hasData ? " open" : "");
+    el.style.setProperty("--i", i);
+    el.dataset.num = i;
+    el.innerHTML =
+      '<div class="num">' + pad(i) + '</div>' +
+      '<span class="lbl">' + (hasData ? tierName(i) : "قيد التجهيز") + '</span>';
+    frag.appendChild(el);
+  }
+  grid.appendChild(frag);
+}
+
+function showView(id){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  const t = document.getElementById(id);
+  if (t) t.classList.add("active");
+  const pill = document.getElementById("headerPill");
+  if (id === "view-levels"){ pill.textContent = "JavaScript · 42 مستوى"; }
+  else if (id === "view-level"){ /* سيُحدَّث داخل renderLevel */ }
+  else { pill.textContent = "جاهز"; }
+  window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function renderLevel(n){
+  const data = L[n];
+  const container = document.getElementById("levelContent");
+  const titleEl = document.getElementById("lvTitle");
+  const pill = document.getElementById("headerPill");
+  pill.textContent = "المستوى " + n;
+
+  if (!data){
+    titleEl.innerHTML = 'المستوى <em>' + n + '</em>';
+    container.innerHTML = '<div class="done-card"><div class="ico">🛠️</div><h3>قيد التجهيز</h3><p>هذا المستوى لسه محتاج يتجهز. ابعت بياناته وأنا أحقنها.</p></div>';
+    showView("view-level");
+    return;
+  }
+
+  titleEl.innerHTML = 'المستوى <em>' + n + '</em> — ' + escapeHtml(data.t);
+
+  let html = '';
+  html += '<div class="lv-hero">' +
+    '<div class="badge">● JavaScript · مفتوح</div>' +
+    '<h1>' + escapeHtml(data.t) + '</h1>' +
+    '<p>كل إجابة قابلة للنسخ بزر واحد. اضغط نسخ وخد النص الخام جاهز.</p>' +
+    '</div>';
+
+  data.s.forEach((section, si) => {
+    html += '<div class="lesson" style="--d:' + si + '">';
+    html += '<div class="lesson-head">' +
+      '<div class="lnum">' + (si + 1) + '</div>' +
+      '<div class="ltitle">' + escapeHtml(section.t) + '</div>' +
+      '</div>';
+
+    section.q.forEach((item, qi) => {
+      const q = item[0], a = item[1], isCode = item[2];
+      const copyAttr = escapeHtml(a).replace(/\n/g, "&#10;");
+      const btn =
+        '<button class="copy" data-copy="' + copyAttr + '">' +
+          '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+          '<span>نسخ</span>' +
+        '</button>';
+
+      html += '<div class="q">';
+      html += '<div class="q-num"><b>' + (qi + 1) + '</b> السؤال</div>';
+      html += '<div class="q-text">' + escapeHtml(q) + '</div>';
+
+      if (isCode){
+        html += '<div class="ans">' + btn +
+          '<div class="ans-label">الكود</div>' +
+          '<pre class="ans-code">' + escapeHtml(a) + '</pre>' +
+        '</div>';
+      } else {
+        html += '<div class="ans text-only">' + btn +
+          '<div class="ans-label">الإجابة</div>' +
+          '<div class="ans-body">' + escapeHtml(a) + '</div>' +
+        '</div>';
+      }
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  html += '<div class="done-card">' +
+    '<div class="ico">🏆</div>' +
+    '<h3>مبروك — المستوى ' + n + ' خلص</h3>' +
+    '<p>كل الإجابات جاهزة للنسخ. اضغط نسخ على أي إجابة وخد النص.</p>' +
+    '</div>';
+
+  container.innerHTML = html;
+  showView("view-level");
+}
+
+/* المستويات - click handler */
+document.getElementById("jsGrid").addEventListener("click", function(e){
+  const card = e.target.closest(".level");
+  if (!card) return;
+  const n = parseInt(card.dataset.num, 10);
+  card.classList.remove("flash");
+  void card.offsetWidth;
+  card.classList.add("flash");
+  renderLevel(n);
+});
+
+/* نسخ */
+const toast = document.getElementById("toast");
+let toastTimer = null;
+function showToast(msg){
+  toast.textContent = msg || "✓ تم النسخ";
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+}
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly","");
+  ta.style.position = "fixed";
+  ta.style.top = "-1000px";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch(e){ ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+function copyText(text){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).then(() => true).catch(() => fallbackCopy(text));
+  }
+  return Promise.resolve(fallbackCopy(text));
+}
+document.addEventListener("click", function(e){
+  const btn = e.target.closest(".copy");
+  if (!btn) return;
+  const text = btn.getAttribute("data-copy") || "";
+  copyText(text).then(ok => {
+    if (ok){
+      btn.classList.add("done");
+      const label = btn.querySelector("span");
+      const old = label ? label.textContent : "";
+      if (label) label.textContent = "تم";
+      showToast("✓ تم النسخ");
+      setTimeout(() => {
+        btn.classList.remove("done");
+        if (label) label.textContent = old;
+      }, 1500);
+    } else {
+      showToast("✗ لم يتم النسخ — جرّب تاني");
+    }
+  });
+});
+
+/* init */
+buildGrid();
+</script>
+
+</body>
+</html>
