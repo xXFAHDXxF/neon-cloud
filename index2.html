@@ -1564,45 +1564,28 @@ const L = {  /* ---------- المستوى 1 ---------- */
 /* =========================================================
    محرك العرض
    ========================================================= */
-   const TOTAL_LEVELS = 42;
-    
-    // === إضافة جديدة: قراءة المستويات من الرابط ===
-    const urlParams = new URLSearchParams(window.location.search);
-    const levelsParam = urlParams.get('levels');
-    
-    let allowedLevels = [];
-    if (levelsParam && levelsParam !== 'all') {
-      if (levelsParam.includes('-')) {
-        const [start, end] = levelsParam.split('-').map(Number);
-        for (let i = start; i <= end; i++) allowedLevels.push(i);
-      } else {
-        allowedLevels = levelsParam.split(',').map(Number);
-      }
-    }
+  /* =========================================================
+   بيانات المستويات (1–42)
+   ========================================================= */
+// (هنا هتسيب الجزء بتاع البيانات const L = { ... } زي ما هو بالظبط بدون أي تعديل)
+// بس عشان الكود يبقى كامل، أنا هحط لك الجزء اللي بيتعدل تحت البيانات مباشرة:
 
-    function pad(n){ return n < 10 ? "0" + n : String(n); }
-    function tierOf(n){ return n <= 10 ? "tier-1" : n <= 20 ? "tier-2" : n <= 30 ? "tier-3" : "tier-4"; }
-    function tierName(n){ return n <= 10 ? "أساسيات" : n <= 20 ? "متوسط" : n <= 30 ? "متقدم" : "احترافي"; }
+const TOTAL_LEVELS = 42;
 
-    function buildGrid(){
-      const grid = document.getElementById("jsGrid");
-      const frag = document.createDocumentFragment();
-      for (let i = 1; i <= TOTAL_LEVELS; i++){
-        // === إضافة جديدة: فلترة المستويات ===
-        if (allowedLevels.length > 0 && !allowedLevels.includes(i)) continue;
-        
-        const el = document.createElement("div");
-        const hasData = !!L[i];
-        el.className = "level " + tierOf(i) + (hasData ? " open" : "");
-        el.style.setProperty("--i", i);
-        el.dataset.num = i;
-        el.innerHTML =
-          '<div class="num">' + pad(i) + '</div>' +
-          '<span class="lbl">' + (hasData ? tierName(i) : "قيد التجهيز") + '</span>';
-        frag.appendChild(el);
-      }
-      grid.appendChild(frag);
-    }
+// === قراءة المستويات من الرابط ===
+const urlParams = new URLSearchParams(window.location.search);
+const levelsParam = urlParams.get('levels');
+
+let allowedLevels = [];
+if (levelsParam && levelsParam !== 'all') {
+  if (levelsParam.includes('-')) {
+    const [start, end] = levelsParam.split('-').map(Number);
+    for (let i = start; i <= end; i++) allowedLevels.push(i);
+  } else {
+    allowedLevels = levelsParam.split(',').map(Number);
+  }
+}
+
 function pad(n){ return n < 10 ? "0" + n : String(n); }
 function tierOf(n){ return n <= 10 ? "tier-1" : n <= 20 ? "tier-2" : n <= 30 ? "tier-3" : "tier-4"; }
 function tierName(n){ return n <= 10 ? "أساسيات" : n <= 20 ? "متوسط" : n <= 30 ? "متقدم" : "احترافي"; }
@@ -1610,7 +1593,14 @@ function tierName(n){ return n <= 10 ? "أساسيات" : n <= 20 ? "متوسط"
 function buildGrid(){
   const grid = document.getElementById("jsGrid");
   const frag = document.createDocumentFragment();
+  
+  // مسح أي مستويات قديمة (عشان لو حصل تحديث)
+  grid.innerHTML = ''; 
+
   for (let i = 1; i <= TOTAL_LEVELS; i++){
+    // فلترة: لو في مستويات محددة، ورقم المستوى ده مش منهم، تخطاه
+    if (allowedLevels.length > 0 && !allowedLevels.includes(i)) continue;
+
     const el = document.createElement("div");
     const hasData = !!L[i];
     el.className = "level " + tierOf(i) + (hasData ? " open" : "");
@@ -1629,7 +1619,7 @@ function showView(id){
   const t = document.getElementById(id);
   if (t) t.classList.add("active");
   const pill = document.getElementById("headerPill");
-  if (id === "view-levels"){ pill.textContent = "JavaScript · 42 مستوى"; }
+  if (id === "view-levels"){ pill.textContent = "JavaScript · " + (allowedLevels.length > 0 ? allowedLevels.length : TOTAL_LEVELS) + " مستوى"; }
   else if (id === "view-level"){ /* سيُحدَّث داخل renderLevel */ }
   else { pill.textContent = "جاهز"; }
   window.scrollTo({ top:0, behavior:"smooth" });
