@@ -91,11 +91,11 @@
     .nav-btn.logout:hover { background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.3); }
     .nav-btn.logout svg { stroke: #ff4d4d; }
     .main-content { flex: 1; height: 100%; padding: 40px; overflow-y: auto; position: relative; }
-    .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; }
-    .tab-content.active { display: block; }
+    .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; width: 100%; height: 100%; }
+    .tab-content.active { display: flex; flex-direction: column; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
-    .page-header { margin-bottom: 30px; }
+    .page-header { margin-bottom: 30px; flex-shrink: 0; }
     .page-header h2 { font-family: "Noto Kufi Arabic", sans-serif; font-size: 2rem; margin: 0 0 10px; }
     .page-header p { color: var(--muted); margin: 0; }
     .welcome-banner { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; margin-bottom: 30px; position: relative; overflow: hidden; }
@@ -155,6 +155,25 @@
     .key-input { width: 100%; padding: 16px; border-radius: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--line); color: var(--text); font-size: 1.2rem; text-align: center; letter-spacing: 4px; text-transform: uppercase; outline: none; margin-bottom: 20px; font-family: monospace; transition: border 0.3s; }
     .key-input:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,240,255,0.2); }
     
+    /* ================= NEW: Iframe Wrapper ================= */
+    .iframe-container {
+      flex: 1;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background: #04060a;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
     .page-content-box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .page-content-box h1 { font-family: "Noto Kufi Arabic", sans-serif; color: var(--cyan); font-size: 3rem; margin-bottom: 20px; }
     .page-content-box p { color: var(--muted); font-size: 1.2rem; }
@@ -183,7 +202,15 @@
     .edit-user-item:last-child { border-bottom: none; }
     .edit-user-item button { background: #ff4d4d; color: #fff; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-family: inherit; font-size: 0.75rem; }
     
-    @media (max-width: 900px) { #dashboardView { flex-direction: column; } .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--line); flex-direction: row; overflow-x: auto; padding: 15px; align-items: center; gap: 10px; } .sidebar-logo { display: none; } .nav-btn { width: auto; white-space: nowrap; margin-bottom: 0; padding: 10px 15px; } .nav-btn.logout { margin-top: 0; margin-right: auto; } .main-content { padding: 20px; } }
+    @media (max-width: 900px) { 
+      #dashboardView { flex-direction: column; } 
+      .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--line); flex-direction: row; overflow-x: auto; padding: 15px; align-items: center; gap: 10px; } 
+      .sidebar-logo { display: none; } 
+      .nav-btn { width: auto; white-space: nowrap; margin-bottom: 0; padding: 10px 15px; } 
+      .nav-btn.logout { margin-top: 0; margin-right: auto; } 
+      .main-content { padding: 20px; } 
+      .iframe-container { min-height: 80vh; }
+    }
   </style>
 </head>
 <body>
@@ -436,9 +463,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, deleteDoc, updateDoc, collection, onSnapshot, query, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // =====================================================================
-    // 🚨 كود Firebase Config الخاص بك
-    // =====================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAwJmYRfk4RwN4rGVUBgoSFV-Q6QvRTGp4",
       authDomain: "neon-cloud-25a57.firebaseapp.com",
@@ -452,7 +476,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // === CONFIG ===
     const ADMIN_USER = 'xXFAHDXx';
     const ADMIN_EMAIL = 'ysyy8282@gmail.com';
     const ADMIN_PASS = '1_xXFAHDXx_1';
@@ -465,7 +488,6 @@
     let messageCheckInterval = null;
     let currentKeysDB = [];
 
-    // === DOM ===
     const authView = document.getElementById('authView');
     const dashboardView = document.getElementById('dashboardView');
     const mainContentArea = document.getElementById('mainContentArea');
@@ -492,7 +514,6 @@
     const receiveMessageModal = document.getElementById('receiveMessageModal');
     const receivedMessageText = document.getElementById('receivedMessageText');
 
-    // === UTILS ===
     function togglePw(inputId, btn) {
       const input = document.getElementById(inputId);
       const show = input.type === 'password';
@@ -524,7 +545,6 @@
       return res + `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     }
 
-    // === AUTH LOGIC ===
     async function enterDashboard(user) {
       const isAdmin = (user.email === ADMIN_EMAIL && user.username === ADMIN_USER);
       currentSession = user;
@@ -633,7 +653,6 @@
       dynamicNavContainer.innerHTML = ''; document.querySelectorAll('.dynamic-page').forEach(el => el.remove());
     }
 
-    // === ADMIN ===
     async function loadAccounts() {
       accountsList.innerHTML = '<p style="color: var(--muted); text-align: center;">جارٍ تحميل الحسابات...</p>';
       onSnapshot(collection(db, "users"), (snapshot) => {
@@ -846,7 +865,6 @@
       keyToEdit = null;
     });
 
-    // === USER LOGIC ===
     async function checkForMessages() {
       if (!currentSession) return;
       const docSnap = await getDoc(doc(db, "messages", currentSession.email));
@@ -916,7 +934,22 @@
         const pageDiv = document.createElement('div');
         pageDiv.className = 'tab-content dynamic-page';
         pageDiv.id = 'tab-' + pageId;
-        pageDiv.innerHTML = `<div class="page-content-box"><h1>${pageName}</h1><p>هذه الصفحة محمية. تم التحقق من المفتاح بنجاح.</p></div>`;
+        
+        // التعديل هنا: وضع الـ iframe لصفحة "حل المنصة"
+        if (pageId === 'page-solve') {
+          pageDiv.innerHTML = `
+            <div class="page-header" style="margin-bottom: 15px;">
+              <h2>حل المنصة</h2>
+              <p>منصة Qureo التفاعلية — مدمجة بالكامل.</p>
+            </div>
+            <div class="iframe-container">
+              <iframe src="./index2.html" title="Qureo Platform"></iframe>
+            </div>
+          `;
+        } else {
+          pageDiv.innerHTML = `<div class="page-content-box"><h1>${pageName}</h1><p>هذه الصفحة محمية. تم التحقق من المفتاح بنجاح.</p></div>`;
+        }
+        
         mainContentArea.appendChild(pageDiv);
       });
     }
@@ -997,7 +1030,6 @@
       }
     })();
 
-    // === EXPORT TO GLOBAL SCOPE FOR HTML INLINE HANDLERS ===
     window.togglePw = togglePw;
     window.switchForm = switchForm;
     window.switchTab = switchTab;
