@@ -370,7 +370,7 @@
               <label><input type="checkbox" id="pageTest" value="page-test"> Test</label>
             </div>
             
-            <div id="levelSelectionArea" style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line);">
+            <div id="levelSelectionArea" style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line); display: block;">
               <label style="display:block; margin-bottom:10px; color:var(--cyan);">تحديد المستويات المتاحة للمستخدم:</label>
               <input type="text" id="kLevelRange" placeholder="مثال: 1-5 أو 1,2,3,4,5 (اتركه فارغاً للكل)" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white; margin-bottom:10px;">
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -434,7 +434,7 @@
         </div>
       </div>
       
-      <div id="editLevelSelectionArea" style="margin-bottom: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line);">
+      <div id="editLevelSelectionArea" style="margin-bottom: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid var(--line); display: none;">
         <label style="display:block; margin-bottom:10px; color:var(--cyan);">تحديد المستويات:</label>
         <input type="text" id="editLevelRange" placeholder="مثال: 1-5 أو 1,2,3,4,5 (اتركه فارغاً للكل)" style="width:100%; padding:10px; border-radius:8px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white; margin-bottom:10px;">
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -759,7 +759,6 @@
       if(document.getElementById('pageTest').checked) targetPages.push('page-test');
       if(targetPages.length === 0) return showMsg(document.getElementById('keyGenMsg'), 'error', 'اختر صفحة واحدة على الأقل.');
 
-      // Level Range
       let allowedLevels = document.getElementById('kLevelRange').value.trim();
       if (!allowedLevels) allowedLevels = 'all';
 
@@ -870,7 +869,6 @@
       document.getElementById('editPageSolve').checked = keyObj.pages.includes('page-solve');
       document.getElementById('editPageTest').checked = keyObj.pages.includes('page-test');
       
-      // Set Levels
       document.getElementById('editLevelRange').value = keyObj.allowedLevels || 'all';
       window.toggleEditLevelSelection();
 
@@ -987,7 +985,6 @@
         pageDiv.id = 'tab-' + pageId;
         
         if (pageId === 'page-solve') {
-          // Pass allowedLevels to iframe
           let url = `./index2.html`;
           if (keyObj.allowedLevels && keyObj.allowedLevels !== 'all') {
             url += `?levels=${encodeURIComponent(keyObj.allowedLevels)}`;
