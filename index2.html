@@ -1767,6 +1767,77 @@ document.addEventListener("click", function(e){
 /* init */
 buildGrid();
 </script>
+<!-- Watermark & Anti-Copy & Mobile Fix -->
+<style>
+  /* إصلاح شاشة الموبايل */
+  @media (max-width: 768px) {
+    .topbar { flex-direction: column; gap: 10px; text-align: center; padding: 15px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+    .level { padding: 10px 5px; }
+    .level .num { font-size: 18px; }
+    .level .lbl { font-size: 8px; }
+    .page-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .page-title { font-size: 20px; }
+    .lesson { padding: 15px 10px; }
+    .ans { padding: 10px; padding-left: 45px; }
+    .ans.text-only { padding-left: 10px; padding-right: 45px; }
+    .copy { padding: 5px 8px; font-size: 9px; }
+  }
 
+  /* العلامة المائية (Watermark) */
+  .watermark-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .watermark-text {
+    font-size: 40px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.05);
+    transform: rotate(-30deg);
+    white-space: nowrap;
+    user-select: none;
+  }
+</style>
+
+<div class="watermark-overlay" id="watermarkContainer"></div>
+
+<script>
+  // 1. إعداد العلامة المائية
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get('user') || 'User';
+  const userEmail = urlParams.get('email') || 'user@example.com';
+  const watermarkText = `${userName} (${userEmail})`;
+  
+  const container = document.getElementById('watermarkContainer');
+  // تكرار النص عشان يغطي الشاشة
+  for (let i = 0; i < 20; i++) {
+    const div = document.createElement('div');
+    div.className = 'watermark-text';
+    div.textContent = watermarkText;
+    // توزيع عشوائي
+    div.style.position = 'absolute';
+    div.style.top = `${Math.random() * 100}%`;
+    div.style.left = `${Math.random() * 100}%`;
+    container.appendChild(div);
+  }
+
+  // 2. منع الكليك يمين و F12
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+          (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+          (e.ctrlKey && e.key === 'U')) {
+          e.preventDefault();
+      }
+  });
+</script>
+  
 </body>
 </html>
