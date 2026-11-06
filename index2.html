@@ -1771,6 +1771,7 @@ buildGrid();
 <style>
   /* إصلاح شاشة الموبايل */
   @media (max-width: 768px) {
+    .wrap { padding: 10px; }
     .topbar { flex-direction: column; gap: 10px; text-align: center; padding: 15px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
     .level { padding: 10px 5px; }
@@ -1815,19 +1816,17 @@ buildGrid();
   const watermarkText = `${userName} (${userEmail})`;
   
   const container = document.getElementById('watermarkContainer');
-  // تكرار النص عشان يغطي الشاشة
   for (let i = 0; i < 20; i++) {
     const div = document.createElement('div');
     div.className = 'watermark-text';
     div.textContent = watermarkText;
-    // توزيع عشوائي
     div.style.position = 'absolute';
     div.style.top = `${Math.random() * 100}%`;
     div.style.left = `${Math.random() * 100}%`;
     container.appendChild(div);
   }
 
-  // 2. منع الكليك يمين و F12
+  // 2. منع الكليك يمين و F12 (للمنصة فقط)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
       if (e.key === 'F12' || 
