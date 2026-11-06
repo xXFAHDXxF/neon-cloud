@@ -20,7 +20,7 @@
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
-    body { background: var(--bg); color: var(--text); font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; overflow: hidden; }
+    body { background: var(--bg); color: var(--text); font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; overflow-x: hidden; }
     body::before { content: ""; position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(0, 240, 255, 0.03), transparent 60%); pointer-events: none; z-index: 0; }
     
     .orb { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.35; pointer-events: none; z-index: 0; animation: drift 20s ease-in-out infinite alternate; }
@@ -30,10 +30,12 @@
     .orb-purple { width: 520px; height: 520px; background: radial-gradient(circle, var(--purple), transparent 70%); bottom: 5%; left: 10%; animation-delay: -12s; opacity: 0.2; }
     @keyframes drift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, -40px) scale(1.15); } }
     
-    .view { position: relative; z-index: 10; width: 100%; height: 100vh; display: none; }
+    .view { position: relative; z-index: 10; width: 100%; min-height: 100vh; display: none; }
     .view.active { display: flex; }
-    #authView { align-items: center; justify-content: center; padding: 24px; }
-    .scene { perspective: 1500px; width: min(440px, 100%); position: relative; transition: transform 0.15s ease-out; transform-style: preserve-3d; }
+    
+    /* إصلاح كارت الدخول */
+    #authView { align-items: center; justify-content: center; padding: 40px 20px; overflow-y: auto; }
+    .scene { perspective: 1500px; width: min(440px, 100%); position: relative; transition: transform 0.15s ease-out; transform-style: preserve-3d; margin: auto; }
     .card { position: relative; width: 100%; display: grid; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s; }
     .card.is-flipped { transform: rotateY(180deg); }
     .face { grid-area: 1 / 1; position: relative; padding: 44px 36px 32px; border-radius: 32px; background: var(--card); backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%); border: 1px solid var(--line); box-shadow: var(--shadow); backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: translateZ(0); }
@@ -81,8 +83,10 @@
     .auth-msg.error { display: block; background: rgba(255, 45, 149, 0.12); color: #ff8fb8; border: 1px solid rgba(255, 45, 149, 0.25); }
     .auth-msg.success { display: block; background: rgba(0, 240, 255, 0.10); color: #7df9ff; border: 1px solid rgba(0, 240, 255, 0.25); }
 
-    #dashboardView { display: none; flex-direction: row; height: 100vh; } #dashboardView.active { display: flex; }
-    .sidebar { width: var(--sidebar-width); height: 100%; background: rgba(10, 12, 18, 0.85); border-left: 1px solid var(--line); backdrop-filter: blur(24px); display: flex; flex-direction: column; padding: 30px 20px; z-index: 20; overflow-y: auto; }
+    /* إصلاح لوحة التحكم والسكرول */
+    #dashboardView { display: none; flex-direction: row; height: 100vh; overflow: hidden; } 
+    #dashboardView.active { display: flex; }
+    .sidebar { width: var(--sidebar-width); height: 100%; background: rgba(10, 12, 18, 0.85); border-left: 1px solid var(--line); backdrop-filter: blur(24px); display: flex; flex-direction: column; padding: 30px 20px; z-index: 20; overflow-y: auto; flex-shrink: 0; }
     .sidebar-logo { font-family: "Noto Kufi Arabic", sans-serif; font-weight: 900; font-size: 1.4rem; color: var(--cyan); margin-bottom: 30px; text-align: center; text-shadow: 0 0 20px rgba(0, 240, 255, 0.4); flex-shrink: 0; }
     .nav-btn { display: flex; align-items: center; gap: 12px; width: 100%; padding: 16px; margin-bottom: 8px; border-radius: 16px; border: 1px solid transparent; background: transparent; color: var(--muted); font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 250ms ease; text-align: right; flex-shrink: 0; }
     .nav-btn:hover { background: rgba(255, 255, 255, 0.03); color: var(--text); }
@@ -93,12 +97,12 @@
     .nav-btn.logout:hover { background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.3); }
     .nav-btn.logout svg { stroke: #ff4d4d; }
     
-    .main-content { flex: 1; height: 100%; padding: 40px; overflow-y: auto; position: relative; display: flex; flex-direction: column; }
-    .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; width: 100%; flex: 1; flex-direction: column; }
-    .tab-content.active { display: flex; }
+    .main-content { flex: 1; height: 100%; min-height: 0; padding: 40px; overflow-y: auto; position: relative; display: flex; flex-direction: column; }
+    .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; width: 100%; }
+    .tab-content.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     
-    .page-header { margin-bottom: 30px; flex-shrink: 0; }
+    .page-header { margin-bottom: 30px; }
     .page-header h2 { font-family: "Noto Kufi Arabic", sans-serif; font-size: 2rem; margin: 0 0 10px; }
     .page-header p { color: var(--muted); margin: 0; }
     .welcome-banner { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; margin-bottom: 30px; position: relative; overflow: hidden; }
@@ -116,7 +120,7 @@
     .checkbox-group label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .checkbox-group input { accent-color: var(--cyan); width: 18px; height: 18px; }
     
-    .keys-panel, .accounts-panel, .blacklist-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; }
+    .keys-panel, .accounts-panel, .blacklist-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; }
     .key-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 20px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 12px; background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px; }
     .key-code { font-family: monospace; font-size: 1.1rem; color: var(--cyan); letter-spacing: 1px; }
     .key-info { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); margin-top: 5px; }
@@ -152,7 +156,7 @@
     .dots-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 8px; font-size: 1.5rem; line-height: 1; transition: color 0.2s; }
     .dots-btn:hover { color: var(--text); }
     
-    .key-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; max-width: 500px; text-align: center; margin: 0 auto; }
+    .key-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; max-width: 500px; text-align: center; margin: 0 auto; margin-bottom: 30px; }
     .key-panel svg { width: 48px; height: 48px; stroke: var(--cyan); fill: none; margin-bottom: 20px; }
     .key-panel h3 { margin: 0 0 10px; }
     .key-panel p { color: var(--muted); margin: 0 0 30px; font-size: 0.95rem; }
@@ -160,12 +164,12 @@
     .key-input:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,240,255,0.2); }
     
     .iframe-container {
-      flex: 1; width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--line);
-      box-shadow: var(--shadow); background: #04060a; position: relative; margin-bottom: 20px; min-height: 500px;
+      width: 100%; border-radius: 20px; overflow: hidden; border: 1px solid var(--line);
+      box-shadow: var(--shadow); background: #04060a; position: relative; margin-bottom: 20px; height: 75vh; min-height: 500px;
     }
     .iframe-container iframe { width: 100%; height: 100%; border: none; display: block; }
 
-    .page-content-box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .page-content-box { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 40px; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 30px; }
     .page-content-box h1 { font-family: "Noto Kufi Arabic", sans-serif; color: var(--cyan); font-size: 3rem; margin-bottom: 20px; }
     .page-content-box p { color: var(--muted); font-size: 1.2rem; }
     
@@ -174,9 +178,9 @@
     .timer-icon { width: 24px; height: 24px; stroke: var(--pink); fill: none; }
     .timer-text { font-family: monospace; font-size: 1.2rem; color: var(--pink); font-weight: 700; }
     
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 999; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 999; overflow-y: auto; padding: 20px; }
     .modal-overlay.active { display: flex; }
-    .modal-box { background: #12141a; border: 1px solid var(--line); border-radius: 20px; padding: 30px; width: 90%; max-width: 450px; box-shadow: var(--shadow); }
+    .modal-box { background: #12141a; border: 1px solid var(--line); border-radius: 20px; padding: 30px; width: 100%; max-width: 450px; box-shadow: var(--shadow); margin: auto; }
     .modal-box h3 { margin: 0 0 20px; text-align: center; }
     .modal-actions { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
     .modal-actions button { padding: 12px 24px; border-radius: 10px; border: none; font-family: inherit; font-weight: 700; cursor: pointer; }
@@ -215,14 +219,15 @@
     /* Mobile Fixes */
     @media (max-width: 900px) { 
       #dashboardView { flex-direction: column; height: 100dvh; } 
-      .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--line); flex-direction: row; overflow-x: auto; padding: 15px; align-items: center; gap: 10px; } 
+      .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--line); flex-direction: row; overflow-x: auto; padding: 15px; align-items: center; gap: 10px; flex-shrink: 0; } 
       .sidebar-logo { display: none; } 
       .nav-btn { width: auto; white-space: nowrap; margin-bottom: 0; padding: 10px 15px; } 
       .nav-btn.logout { margin-top: 0; margin-right: auto; } 
-      .main-content { padding: 15px; overflow-y: auto; } 
-      .iframe-container { min-height: 70dvh; flex: none; }
+      .main-content { padding: 15px; overflow-y: auto; min-height: 0; } 
+      .iframe-container { height: 70vh; min-height: 400px; flex: none; }
       .upsell-banner { flex-direction: column; text-align: center; }
       .upsell-banner a { width: 100%; }
+      .face { padding: 30px 20px 24px; }
     }
   </style>
 </head>
@@ -371,7 +376,6 @@
           <p id="welcomeSub">أنت الآن في مركز التحكم الخاص بك. واصل الإبداع.</p>
         </div>
 
-        <!-- Upsell Banner (User Only) -->
         <div class="upsell-banner user-only" id="upsellBanner" style="display: none;">
           <div class="upsell-text">
             <h3>🚀 ارتقِ بمستواك!</h3>
@@ -772,7 +776,11 @@
           userToLogin.username = ADMIN_USER;
         } else {
           const docSnap = await getDoc(doc(db, "users", email));
-          if (docSnap.exists()) { const parsed = docSnap.data(); if (parsed.password === password) userToLogin = parsed; }
+          if (docSnap.exists()) { 
+            const parsed = docSnap.data(); 
+            if (parsed.isBanned) return showMsg(msg, 'error', 'هذا الحساب محظور. تواصل مع الإدارة.');
+            if (parsed.password === password) userToLogin = parsed; 
+          }
         }
       } catch (err) { return showMsg(msg, 'error', 'حدث خطأ في الاتصال بالخادم.'); }
 
@@ -798,7 +806,7 @@
         const docSnap = await getDoc(doc(db, "users", email));
         if (docSnap.exists()) { showMsg(msg, 'error', 'هذا البريد مسجل مسبقاً.'); } 
         else {
-          const user = { username, email, password, isOnline: false, activeKeyCode: null };
+          const user = { username, email, password, isOnline: false, activeKeyCode: null, isBanned: false };
           await setDoc(doc(db, "users", email), user);
           showMsg(msg, 'success', 'تم إنشاء الحساب...');
           setTimeout(() => enterDashboard(user), 600);
@@ -863,7 +871,7 @@
             username: username,
             bannedAt: Date.now()
         }).then(async () => {
-            await deleteDoc(doc(db, "users", email));
+            await updateDoc(doc(db, "users", email), { isBanned: true, isOnline: false }); // Ban instead of delete
             alert('تم حظر الحساب والجهاز بنجاح.');
             loadAccounts();
         });
@@ -888,7 +896,7 @@
                 <span class="acc-pass" style="font-size: 0.75rem;">ID: ${id.substring(0, 10)}...</span>
             </div>
             <div class="acc-status">
-                <button class="btn-glow" onclick="window.unbanUser('${id}')" style="min-height: 36px; padding: 0 15px; font-size: 0.85rem; border-color: var(--green); color: var(--green);"><span>إلغاء الحظر</span></button>
+                <button class="btn-glow" onclick="window.unbanUser('${id}', '${data.email}')" style="min-height: 36px; padding: 0 15px; font-size: 0.85rem; border-color: var(--green); color: var(--green);"><span>إلغاء الحظر</span></button>
             </div>
           `;
           container.appendChild(row);
@@ -897,9 +905,12 @@
       });
     }
 
-    async function unbanUser(id) {
-        if(!confirm('هل تريد إلغاء حظر هذا الجهاز؟')) return;
+    async function unbanUser(id, email) {
+        if(!confirm('هل تريد إلغاء حظر هذا الجهاز والحساب؟')) return;
         await deleteDoc(doc(db, "blacklist", id));
+        if (email) {
+            await updateDoc(doc(db, "users", email), { isBanned: false }).catch(()=>{});
+        }
         alert('تم إلغاء الحظر.');
     }
 
