@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@500;700;900&display=swap" rel="stylesheet">
   
-  <!-- مكتبة بصمة الجهاز -->
   <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 
   <style>
@@ -194,17 +193,36 @@
     .edit-user-item:last-child { border-bottom: none; }
     .edit-user-item button { background: #ff4d4d; color: #fff; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-family: inherit; font-size: 0.75rem; }
     
-    /* Broadcast Modal Style */
-    #broadcastModal .modal-box { border-color: var(--cyan); box-shadow: 0 0 40px rgba(0,240,255,0.2); }
-    
+    .upsell-banner {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: var(--radius);
+      padding: 30px;
+      margin-bottom: 30px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.15);
+    }
+    .upsell-banner::before {
+      content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: sweep 3s infinite;
+    }
+    @keyframes sweep { 100% { left: 200%; } }
+    .upsell-text h3 { margin: 0 0 5px; color: #fff; font-size: 1.3rem; }
+    .upsell-text p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+    /* Mobile Fixes */
     @media (max-width: 900px) { 
       #dashboardView { flex-direction: column; height: 100dvh; } 
       .sidebar { width: 100%; height: auto; border-left: none; border-bottom: 1px solid var(--line); flex-direction: row; overflow-x: auto; padding: 15px; align-items: center; gap: 10px; } 
       .sidebar-logo { display: none; } 
       .nav-btn { width: auto; white-space: nowrap; margin-bottom: 0; padding: 10px 15px; } 
       .nav-btn.logout { margin-top: 0; margin-right: auto; } 
-      .main-content { padding: 20px; overflow-y: auto; } 
-      .iframe-container { min-height: 65dvh; flex: none; }
+      .main-content { padding: 15px; overflow-y: auto; } 
+      .iframe-container { min-height: 70dvh; flex: none; }
+      .upsell-banner { flex-direction: column; text-align: center; }
+      .upsell-banner a { width: 100%; }
     }
   </style>
 </head>
@@ -340,7 +358,6 @@
     <main class="main-content" id="mainContentArea">
       <div class="tab-content active" id="tab-home">
         
-        <!-- Broadcast Box (Admin Only) -->
         <div class="admin-only" style="margin-bottom: 30px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); padding: 20px; border-radius: 16px; display: none;">
           <h3 style="margin-top:0; color:var(--cyan);">إرسال إشعار للجميع (Broadcast)</h3>
           <div class="form-group">
@@ -355,12 +372,12 @@
         </div>
 
         <!-- Upsell Banner (User Only) -->
-        <div class="upsell-banner user-only" id="upsellBanner" style="display: none; background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15)); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div class="upsell-banner user-only" id="upsellBanner" style="display: none;">
           <div class="upsell-text">
-            <h3 style="margin: 0 0 5px; color: #fff; font-size: 1.3rem;">🚀 ارتقِ بمستواك!</h3>
-            <p style="margin: 0; color: var(--muted); font-size: 0.95rem;">احصل على جميع المستويات (1-42) أو مدد وقت مفتاحك الآن.</p>
+            <h3>🚀 ارتقِ بمستواك!</h3>
+            <p>احصل على جميع المستويات (1-42) أو مدد وقت مفتاحك الآن بأسعار مميزة.</p>
           </div>
-          <a href="#" target="_blank" class="btn-glow" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 25px; min-height: 46px; font-size: 0.95rem; border-color: var(--purple);"><span>ترقية الآن</span></a>
+          <a href="https://wa.me/201148553564?text=مرحباً،%20أريد%20ترقية%20حسابي/تمديد%20المفتاح" target="_blank" class="btn-glow" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 25px; min-height: 46px; font-size: 0.95rem; border-color: var(--purple);"><span>ترقية الآن</span></a>
         </div>
 
         <div class="page-header"><h2>مميزات النظام</h2><p>كل ما تحتاجه للتحكم في منصتك من مكان واحد.</p></div>
@@ -520,7 +537,6 @@
     </div>
   </div>
 
-  <!-- Broadcast Modal -->
   <div class="modal-overlay" id="broadcastModal" style="z-index: 1001;">
     <div class="modal-box" style="border-color: var(--cyan); box-shadow: 0 0 40px rgba(0,240,255,0.2);">
       <h3 style="color: var(--cyan);">📢 إشعار هام</h3>
@@ -554,31 +570,20 @@
 
     let currentSession = null;
     let accountToDelete = null;
-    let accountToBan = null;
     let keyToEdit = null;
     let msgTargetEmail = null;
     let globalTimerInterval = null;
     let messageCheckInterval = null;
     let currentKeysDB = [];
     let allAccountsData = [];
-    let allBlacklistData = [];
     let inactivityTimer = null;
     let visitorId = null;
 
-    // FingerprintJS Initialization
     (async () => {
         const fp = await FingerprintJS.load();
         const result = await fp.get();
         visitorId = result.visitorId;
     })();
-
-    // Anti-Copy
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
-            e.preventDefault();
-        }
-    });
 
     function resetInactivityTimer() {
       clearTimeout(inactivityTimer);
@@ -662,7 +667,6 @@
     }
     function setEditLevelRange(val) { document.getElementById('editLevelRange').value = val; }
 
-    // === Broadcast Logic ===
     async function sendBroadcast() {
       const text = document.getElementById('broadcastMsg').value.trim();
       if (!text) return alert('اكتب الإشعار أولاً.');
@@ -683,7 +687,6 @@
       }
     });
 
-    // === Export CSV ===
     function downloadCSV(csv, filename) {
       let csvFile = new Blob([csv], {type: "text/csv;charset=utf-8;"});
       let downloadLink = document.createElement("a");
@@ -695,7 +698,7 @@
     }
     function exportAccountsCSV() {
       if (allAccountsData.length === 0) return alert("لا توجد بيانات.");
-      let csv = "\uFEFFاسم الحساب,البريد الإلكتروني,كلمة المرور,الحالة\n"; // \uFEFF for Excel UTF-8 BOM
+      let csv = "\uFEFFاسم الحساب,البريد الإلكتروني,كلمة المرور,الحالة\n";
       allAccountsData.forEach(u => {
         csv += `"${u.username}","${u.email}","${u.password}","${u.isOnline ? 'متصل' : 'غير متصل'}"\n`;
       });
@@ -750,7 +753,6 @@
       }
     }
 
-    // Check for BAN before Login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim(), password = document.getElementById('loginPassword').value, msg = document.getElementById('loginMsg');
@@ -778,7 +780,6 @@
       else showMsg(msg, 'error', 'بيانات الدخول غير صحيحة.');
     });
 
-    // Check for BAN before Register
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim(), email = document.getElementById('regEmail').value.trim(), password = document.getElementById('regPassword').value, confirm = document.getElementById('regConfirm').value, msg = document.getElementById('registerMsg');
@@ -853,7 +854,6 @@
       if (count === 0) accountsList.innerHTML = `<p style="color: var(--muted); text-align: center;">لا توجد حسابات مطابقة.</p>`;
     }
 
-    // Ban Logic
     function promptBan(email, username) {
         if(!confirm(`هل أنت متأكد من حظر الحساب (${username}) وجهازه نهائياً؟`)) return;
         if(!visitorId) return alert('جاري تجهيز بصمة الجهاز... حاول بعد لحظات.');
@@ -877,7 +877,7 @@
         let count = 0;
         snapshot.forEach(docSnap => {
           const data = docSnap.data();
-          const id = docSnap.id; // fingerprint ID
+          const id = docSnap.id;
           count++;
           const row = document.createElement('div');
           row.className = 'blacklist-row';
@@ -1293,4 +1293,4 @@
     window.unbanUser = unbanUser;
   </script>
 </body>
-  </html>
+</html>
