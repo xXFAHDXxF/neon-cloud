@@ -149,7 +149,16 @@
     .keys-panel, .accounts-panel, .blacklist-panel, .logs-panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; }
     .key-row, .log-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 20px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 12px; background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 10px; }
     .light-mode .key-row, .light-mode .log-row { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.05); }
-    .key-code { font-family: monospace; font-size: 1.1rem; color: var(--cyan); letter-spacing: 1px; }
+    .key-code { font-family: monospace; font-size: 1.1rem; color: var(--cyan); letter-spacing: 1px; display: flex; align-items: center; }
+    
+    .copy-btn {
+        background: rgba(255,255,255,0.1); border: 1px solid var(--line);
+        color: var(--muted); cursor: pointer; border-radius: 4px;
+        padding: 2px 6px; font-size: 0.8rem; margin-right: 8px;
+        transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--cyan); color: #000; border-color: var(--cyan); }
+
     .key-info { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); margin-top: 5px; }
     .key-status { padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
     .key-status.active { background: rgba(0, 240, 255, 0.1); color: var(--cyan); border: 1px solid rgba(0, 240, 255, 0.3); }
@@ -465,10 +474,10 @@
 
           <div class="upsell-banner" id="upsellBanner" style="display: none;">
             <div class="upsell-text">
-              <h3>🚀 ارتقِ بمستواك!</h3>
-              <p>احصل على جميع المستويات (1-42) أو مدد وقت مفتاحك الآن بأسعار مميزة.</p>
+              <h3>🚀 تحتاج مساعدة؟</h3>
+              <p>تواصل معنا مباشرة للاستفسار عن الباقات أو تجديد المفتاح.</p>
             </div>
-            <a href="https://wa.me/201148553564?text=مرحباً،%20أريد%20ترقية%20حسابي/تمديد%20المفتاح" target="_blank" class="btn-glow" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 25px; min-height: 46px; font-size: 0.95rem; border-color: var(--purple);"><span>ترقية الآن</span></a>
+            <a href="https://wa.me/201148553564?text=مرحباً،%20أحتاج%20إلى%20مساعدة%20بخصوص%20حسابي" target="_blank" class="btn-glow" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 25px; min-height: 46px; font-size: 0.95rem; border-color: var(--cyan); color: var(--cyan);"><span>تواصل مع الدعم</span></a>
           </div>
         </div>
       </div>
@@ -651,7 +660,7 @@
       <h3 style="color: var(--cyan);">📢 إشعار هام</h3>
       <div class="received-msg-content" id="broadcastText" style="font-weight: bold; font-size: 1.1rem;"></div>
       <div class="modal-actions">
-        <button class="btn-confirm" onclick="window.closeModal('broadcastModal')">حسناً، شكراً</button>
+        <button class="btn-confirm" onclick="window.dismissBroadcast()">حسناً، شكراً</button>
       </div>
     </div>
   </div>
@@ -688,6 +697,7 @@
     let allLogsData = [];
     let inactivityTimer = null;
     let visitorId = null;
+    let currentBroadcastData = null;
 
     // Theme Setup
     const savedTheme = localStorage.getItem('theme');
@@ -838,6 +848,15 @@
         downloadAnchorNode.remove();
     };
 
+    // === COPY KEY ===
+    window.copyKeyCode = function(text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅';
+            setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+        }).catch(() => alert('فشل النسخ، حاول مرة أخرى.'));
+    };
+
     // === BROADCAST ===
     async function sendBroadcast() {
       const text = document.getElementById('broadcastMsg').value.trim();
@@ -848,17 +867,28 @@
       addLog('بث إشعار', text);
     }
 
-    onSnapshot(doc(db, "settings", "broadcast"), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        const lastSeen = parseInt(sessionStorage.getItem('lastBroadcast') || '0');
-        if (data.timestamp > lastSeen) {
-          document.getElementById('broadcastText').textContent = data.text;
-          document.getElementById('broadcastModal').classList.add('active');
-          sessionStorage.setItem('lastBroadcast', data.timestamp.toString());
+    function listenToBroadcasts(userEmail) {
+        const seenKey = 'seen_broadcast_' + userEmail;
+        onSnapshot(doc(db, "settings", "broadcast"), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const lastSeen = parseInt(localStorage.getItem(seenKey) || '0');
+                if (data.timestamp > lastSeen) {
+                    currentBroadcastData = { text: data.text, timestamp: data.timestamp, userEmail: userEmail };
+                    document.getElementById('broadcastText').textContent = data.text;
+                    document.getElementById('broadcastModal').classList.add('active');
+                }
+            }
+        });
+    }
+
+    window.dismissBroadcast = function() {
+        if (currentBroadcastData) {
+            localStorage.setItem('seen_broadcast_' + currentBroadcastData.userEmail, currentBroadcastData.timestamp.toString());
+            currentBroadcastData = null;
         }
-      }
-    });
+        closeModal('broadcastModal');
+    };
 
     // === SIDEBAR / NAVIGATION ===
     function togglePw(inputId, btn) {
@@ -946,6 +976,8 @@
         switchTab('home', document.querySelector('.nav-btn'));
         loadAccounts();
       }
+      
+      listenToBroadcasts(user.email);
     }
 
     loginForm.addEventListener('submit', async (e) => {
@@ -1203,7 +1235,7 @@
         row.innerHTML = `
           <div style="width: 100%;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-              <div class="key-code">${k.code}</div>
+              <div class="key-code">${k.code} <button class="copy-btn" onclick="window.copyKeyCode('${k.code}', this)" title="نسخ المفتاح">📋</button></div>
               <div style="display:flex; align-items:center; gap:10px;">
                 <div class="key-devices">${k.devicesUsed ? k.devicesUsed.length : 0} / ${k.deviceLimit} أجهزة</div>
                 <div class="key-status ${statusClass}">${statusText}</div>
@@ -1512,6 +1544,8 @@
     window.unbanUser = unbanUser;
     window.toggleTheme = toggleTheme;
     window.downloadBackup = downloadBackup;
+    window.copyKeyCode = copyKeyCode;
+    window.dismissBroadcast = dismissBroadcast;
   </script>
 </body>
 </html>
