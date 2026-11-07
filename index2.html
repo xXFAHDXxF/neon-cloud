@@ -1594,7 +1594,7 @@ function buildGrid(){
   const grid = document.getElementById("jsGrid");
   const frag = document.createDocumentFragment();
   
-  // مسح أي مستويات قديمة (عشان لو حصل تحديث)
+  // مسح أي مستويات قديمة
   grid.innerHTML = ''; 
 
   for (let i = 1; i <= TOTAL_LEVELS; i++){
@@ -1767,9 +1767,8 @@ document.addEventListener("click", function(e){
 /* init */
 buildGrid();
 </script>
-<!-- Watermark & Anti-Copy & Mobile Fix -->
+<!-- Watermark, Anti-Copy & Mobile Fix -->
 <style>
-  /* إصلاح شاشة الموبايل */
   @media (max-width: 768px) {
     .wrap { padding: 10px; }
     .topbar { flex-direction: column; gap: 10px; text-align: center; padding: 15px; }
@@ -1785,48 +1784,37 @@ buildGrid();
     .copy { padding: 5px 8px; font-size: 9px; }
   }
 
-  /* العلامة المائية (Watermark) */
   .watermark-overlay {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
   }
   .watermark-text {
-    font-size: 40px;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.05);
-    transform: rotate(-30deg);
-    white-space: nowrap;
-    user-select: none;
+    font-size: 40px; font-weight: bold; color: rgba(255, 255, 255, 0.05);
+    transform: rotate(-30deg); white-space: nowrap; user-select: none;
   }
 </style>
 
 <div class="watermark-overlay" id="watermarkContainer"></div>
 
 <script>
-  // 1. إعداد العلامة المائية
-  const urlParams = new URLSearchParams(window.location.search);
-  const userName = urlParams.get('user') || 'User';
-  const userEmail = urlParams.get('email') || 'user@example.com';
-  const watermarkText = `${userName} (${userEmail})`;
+  // إعداد العلامة المائية الشفافة
+  const wmUrlParams = new URLSearchParams(window.location.search);
+  const wmUserName = wmUrlParams.get('user') || 'User';
+  const wmUserEmail = wmUrlParams.get('email') || 'user@example.com';
+  const wmText = `${wmUserName} (${wmUserEmail})`;
   
-  const container = document.getElementById('watermarkContainer');
+  const wmContainer = document.getElementById('watermarkContainer');
   for (let i = 0; i < 20; i++) {
     const div = document.createElement('div');
     div.className = 'watermark-text';
-    div.textContent = watermarkText;
+    div.textContent = wmText;
     div.style.position = 'absolute';
     div.style.top = `${Math.random() * 100}%`;
     div.style.left = `${Math.random() * 100}%`;
-    container.appendChild(div);
+    wmContainer.appendChild(div);
   }
 
-  // 2. منع الكليك يمين و F12 (للمنصة فقط)
+  // منع الكليك يمين و F12
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
       if (e.key === 'F12' || 
