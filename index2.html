@@ -284,9 +284,50 @@ body::after{
   .copy svg{width:13px;height:13px}
 }
 </style>
+
+<!-- ⬇️ أضف من هنا -->
+<style>
+  body.auth-locked #jsGrid,
+  body.auth-locked #view-level,
+  body.auth-locked .watermark-overlay {
+    visibility: hidden !important;
+  }
+  #authGate {
+    position: fixed; inset: 0; z-index: 99999;
+    background: #04060a; display: none;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px; padding: 24px;
+    text-align: center; font-family: "Cairo","Segoe UI",sans-serif;
+    color: #e7eef9;
+  }
+  #authGate .spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 3px solid rgba(34,211,238,.2);
+    border-top-color: #22d3ee;
+    animation: authSpin 0.9s linear infinite;
+  }
+  @keyframes authSpin { to { transform: rotate(360deg); } }
+  #authGate h2 { font-size: 20px; font-weight: 800; margin: 0; }
+  #authGate p { color: #78859a; font-size: 13px; max-width: 400px; line-height: 1.8; margin: 0; }
+  #authGate button {
+    margin-top: 8px; padding: 12px 28px; border-radius: 12px; border: none;
+    cursor: pointer; font-family: inherit; font-weight: 800; font-size: 13px;
+    color: #04060a; background: linear-gradient(100deg,#22d3ee,#3b82f6);
+  }
+  #authGate .err-ico { font-size: 44px; }
+</style>
+<!-- ⬆️ لحد هنا -->
+  
 </head>
 <body>
-
+<!-- ⬇️ أضف من هنا -->
+<div id="authGate">
+  <div class="spinner"></div>
+  <h2>جارٍ التحقق من صلاحية الوصول...</h2>
+  <p>يتم التأكد من حسابك ومفتاحك وصلاحية المستويات.</p>
+</div>
+<script>document.body.classList.add('auth-locked');</script>
+<!-- ⬆️ لحد هنا -->
 <div class="wrap">
 
   <div class="topbar">
@@ -1819,7 +1860,7 @@ buildGrid();
     }
   }
 
-  // منع الكليك يمين و F12
+    // منع الكليك يمين و F12
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
       if (e.key === 'F12' || 
@@ -1830,6 +1871,125 @@ buildGrid();
       }
   });
 </script>
-  
+
+<!-- ⬇️ الصق سكريبت التحقق من هنا -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const cfg = {
+  apiKey: "AIzaSyAwJmYRfk4RwN4rGVUBgoSFV-Q6QvRTGp4",
+  authDomain: "neon-cloud-25a57.firebaseapp.com",
+  projectId: "neon-cloud-25a57",
+  storageBucket: "neon-cloud-25a57.firebasestorage.app",
+  messagingSenderId: "1062124951949",
+  appId: "1:1062124951949:web:132561d10869dc66a685c4",
+  measurementId: "G-5Y2CCVN1CG"
+};
+
+const app  = initializeApp(cfg);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+const gate   = document.getElementById('authGate');
+const params = new URLSearchParams(location.search);
+const urlEmail = (params.get('email') || '').trim().toLowerCase();
+
+function deny(title, msg) {
+  gate.innerHTML = `
+    <div class="err-ico">🚫</div>
+    <h2>${title}</h2>
+    <p>${msg}</p>
+    <button onclick="location.href='./index.html'">العودة لتسجيل الدخول</button>`;
+  gate.style.display = 'flex';
+  document.body.classList.add('auth-locked');
+}
+
+function parseRange(spec) {
+  spec = String(spec || '').trim().toLowerCase();
+  if (!spec || spec === 'all') return null;
+  const set = new Set();
+  for (const part of spec.split(',')) {
+    const p = part.trim();
+    if (p.includes('-')) {
+      const [a, b] = p.split('-').map(x => parseInt(x, 10));
+      if (!isNaN(a) && !isNaN(b))
+        for (let i = Math.min(a, b); i <= Math.max(a, b); i++) set.add(i);
+    } else {
+      const n = parseInt(p, 10);
+      if (!isNaN(n)) set.add(n);
+    }
+  }
+  return set;
+}
+
+function applyFilter() {
+  const allowed = window.__ALLOWED_LEVELS;
+  document.querySelectorAll('.level').forEach(card => {
+    const num = parseInt(card.querySelector('.num')?.textContent, 10);
+    if (!isNaN(num) && allowed && !allowed.has(num)) {
+      card.style.display = 'none';
+    }
+  });
+  document.body.classList.remove('auth-locked');
+  gate.style.display = 'none';
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    deny('تسجيل الدخول مطلوب', 'افتح المنصة من داخل البوابة بعد تسجيل الدخول.');
+    return;
+  }
+  if (!urlEmail || urlEmail !== user.email.toLowerCase()) {
+    deny('وصول غير مطابق', 'البريد في الرابط لا يطابق الحساب المسجل دخوله.');
+    return;
+  }
+  try {
+    const uSnap = await getDoc(doc(db, 'users', user.email));
+    if (!uSnap.exists()) { deny('حساب غير موجود', 'لا توجد بيانات لهذا الحساب.'); return; }
+    const profile = uSnap.data();
+    if (profile.isBanned) { await signOut(auth); deny('حساب محظور', 'تم إيقاف هذا الحساب.'); return; }
+    if (!profile.activeKeyCode) { deny('لا يوجد مفتاح نشط', 'أدخل مفتاحك من لوحة التحكم أولاً.'); return; }
+
+    const kSnap = await getDoc(doc(db, 'keys', profile.activeKeyCode));
+    if (!kSnap.exists()) { deny('المفتاح غير موجود', 'تم إلغاء المفتاح من الإدارة.'); return; }
+    const k = kSnap.data();
+
+    if (!(k.devicesUsed || []).some(d => d.email === user.email)) {
+      deny('الجهاز غير مسجل', 'لم يعد جهازك مسجلاً على هذا المفتاح.'); return;
+    }
+    if (!k.claimedAt || Date.now() > k.expiry) {
+      deny('انتهت صلاحية المفتاح', 'جدّد المفتاح للمتابعة.'); return;
+    }
+    if (!(k.pages || []).includes('page-solve')) {
+      deny('الصفحة غير مفعّلة', 'هذا المفتاح لا يمنح الوصول لصفحة حل المنصة.'); return;
+    }
+
+    window.__ALLOWED_LEVELS = parseRange(k.allowedLevels);
+    window.__KEY_CODE = profile.activeKeyCode;
+
+    setTimeout(applyFilter, 80);
+  } catch (e) {
+    console.error(e);
+    deny('فشل التحقق', 'تعذر التحقق من الصلاحية. أعد المحاولة.');
+  }
+});
+
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.level');
+  if (!card) return;
+  const num = parseInt(card.querySelector('.num')?.textContent, 10);
+  const allowed = window.__ALLOWED_LEVELS;
+  if (allowed && !isNaN(num) && !allowed.has(num)) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    alert('هذا المستوى غير متاح في مفتاحك الحالي.');
+  }
+}, true);
+</script>
+<!-- ⬆️ لحد هنا -->
+
 </body>
 </html>
