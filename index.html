@@ -264,13 +264,13 @@
             <button class="tab active" type="button">دخول</button>
             <button class="tab" type="button" onclick="window.switchForm('register')">إنشاء حساب</button>
           </div>
-          <form class="form" id="loginForm">
+          <form class="form" id="loginForm" autocomplete="off">
             <div class="input-group">
-              <input type="email" id="loginEmail" placeholder=" " required />
+              <input type="email" id="loginEmail" placeholder=" " required autocomplete="off" />
               <label>البريد الإلكتروني</label>
             </div>
             <div class="input-group">
-              <input type="password" id="loginPassword" placeholder=" " required />
+              <input type="password" id="loginPassword" placeholder=" " required autocomplete="new-password" />
               <label>كلمة المرور</label>
               <button type="button" class="toggle-pw" onclick="window.togglePw('loginPassword', this)">
                 <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -294,24 +294,24 @@
             <button class="tab" type="button" onclick="window.switchForm('login')">دخول</button>
             <button class="tab active" type="button">إنشاء حساب</button>
           </div>
-          <form class="form" id="registerForm">
+          <form class="form" id="registerForm" autocomplete="off">
             <div class="input-group">
-              <input type="text" id="regUsername" placeholder=" " required />
+              <input type="text" id="regUsername" placeholder=" " required autocomplete="off" />
               <label>اسم الحساب</label>
             </div>
             <div class="input-group">
-              <input type="email" id="regEmail" placeholder=" " required />
+              <input type="email" id="regEmail" placeholder=" " required autocomplete="off" />
               <label>البريد الإلكتروني</label>
             </div>
             <div class="input-group">
-              <input type="password" id="regPassword" placeholder=" " required minlength="6" />
+              <input type="password" id="regPassword" placeholder=" " required minlength="6" autocomplete="new-password" />
               <label>كلمة المرور</label>
               <button type="button" class="toggle-pw" onclick="window.togglePw('regPassword', this)">
                 <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </button>
             </div>
             <div class="input-group">
-              <input type="password" id="regConfirm" placeholder=" " required minlength="6" />
+              <input type="password" id="regConfirm" placeholder=" " required minlength="6" autocomplete="new-password" />
               <label>تأكيد كلمة المرور</label>
               <button type="button" class="toggle-pw" onclick="window.togglePw('regConfirm', this)">
                 <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -465,7 +465,7 @@
         <div class="key-panel">
           <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
           <h3>أدخل الكود هنا</h3><p>المفتاح يتكون من 20 حرفاً ورقماً.</p>
-          <input type="text" class="key-input" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" id="userKeyInput" maxlength="23" />
+          <input type="text" class="key-input" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" id="userKeyInput" maxlength="23" autocomplete="off" />
           <button class="btn-glow" type="button" style="width: 100%;" onclick="window.redeemKey()"><span>دخول</span></button>
           <div class="auth-msg" id="userKeyMsg"></div>
         </div>
@@ -582,7 +582,8 @@
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import {
       getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-      signOut, onAuthStateChanged
+      signOut, onAuthStateChanged,
+      setPersistence, browserSessionPersistence
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -599,6 +600,9 @@
     const db   = getFirestore(app);
     const auth = getAuth(app);
 
+    // الجلسة تخص التاب الحالي فقط — تُمسح عند إغلاق التاب
+    await setPersistence(auth, browserSessionPersistence);
+
     const ADMIN_EMAIL = 'ysyy8282@gmail.com';
 
     let currentSession     = null;
@@ -614,12 +618,10 @@
     let visitorId          = null;
     let currentBroadcastData = null;
 
-    // XSS escape
     const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => (
       {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]
     ));
 
-    // Device fingerprint
     (async () => {
       try {
         const fp = await FingerprintJS.load();
@@ -628,7 +630,6 @@
       } catch (e) { console.warn('FP failed', e); }
     })();
 
-    // Theme
     if (localStorage.getItem('theme') === 'light') {
       document.body.classList.add('light-mode');
       document.getElementById('themeIcon').innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>';
@@ -641,7 +642,6 @@
         : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
     };
 
-    // Elements
     const authView        = document.getElementById('authView');
     const dashboardView   = document.getElementById('dashboardView');
     const mainContentArea = document.getElementById('mainContentArea');
@@ -741,7 +741,6 @@
     window.addEventListener('keydown', resetInactivityTimer);
     window.addEventListener('touchstart', resetInactivityTimer);
 
-    // Register
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -760,7 +759,7 @@
       try {
         const banDoc = await getDoc(doc(db, "blacklist", visitorId));
         if (banDoc.exists()) return showMsg(msg, 'error', 'هذا الجهاز محظور.');
-      } catch { /* rules تمنع القراءة غير المسجلة */ }
+      } catch { /* rules */ }
 
       const btn = registerForm.querySelector('button[type="submit"]');
       btn.disabled = true; btn.querySelector('span').textContent = 'جارٍ الإنشاء...';
@@ -785,7 +784,6 @@
       }
     });
 
-    // Login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email    = document.getElementById('loginEmail').value.trim();
@@ -806,11 +804,11 @@
       }
     });
 
-    // Auth state
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         authView.classList.add('active');
         dashboardView.classList.remove('active');
+        currentSession = null;
         return;
       }
       try {
@@ -978,7 +976,7 @@
         const snap = await getDoc(doc(db, "users", email));
         if (!snap.exists()) return alert('المستخدم غير موجود.');
         const deviceId = snap.data().deviceId;
-        if (!deviceId) return alert('لا توجد بصمة جهاز لهذا المستخدم.');
+        if (!deviceId) return alert('لا توجد بصمة جهاز لهذا المستخدم — لا يمكن حظره.');
         await setDoc(doc(db, "blacklist", deviceId), {
           email, username, bannedAt: Date.now()
         });
